@@ -194,3 +194,4 @@ public class ChuyenBan extends JFrame implements ActionListener {
 	    }
 	}
 }
+//test
