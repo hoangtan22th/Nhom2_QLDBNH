@@ -11,8 +11,8 @@ public class connectDB {
         Connection c = null;
         String url = "jdbc:sqlserver://localhost:1433;databaseName=QuanLyDatBanNhaHang;encrypt=false;";
 
-        String[] users = {"dat", "sa", "thaiphat"};
-        String[] passwords = {"12345678", "sapassword", "thaiphat_password"};
+        String[] users = {"dat", "sa", "sa"};
+        String[] passwords = {"12345678", "sapassword", "sapassword"};
 
         for (int i = 0; i < users.length; i++) {
             try {
