@@ -9,7 +9,7 @@ public class connectDB {
 
     public static Connection getConnection() {
         Connection c = null;
-        String url = "jdbc:sqlserver://localhost:1433;databaseName=QuanLyDatBanNhaHang;encrypt=false;";
+        String url = "jdbc:sqlserver://localhost:1433;databaseName=model;encrypt=false;";
 
         String[] users = {"dat", "sa", "sa"};
         String[] passwords = {"12345678", "sapassword", "sapassword"};
