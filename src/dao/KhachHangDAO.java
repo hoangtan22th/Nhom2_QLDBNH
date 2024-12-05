@@ -18,6 +18,8 @@ public class KhachHangDAO {
 
     // Method to add a new customer
     public boolean themKhachHang(KhachHang kh) {
+    	kh.setMaKH(generateMaKH());
+    	
         String sql = "INSERT INTO KhachHang (maKH, tenKH, ngaySinh, sdt) VALUES (?, ?, ?, ?)";
         try (Connection con = connectDB.getConnection(); 
              PreparedStatement pst = con.prepareStatement(sql)) {
@@ -30,6 +32,46 @@ public class KhachHangDAO {
             e.printStackTrace();
             return false;
         }
+    }
+    
+//    public String getMaxMaKH() {
+//        String sql = "SELECT MAX(maKH) AS maxMaKH FROM KhachHang";
+//        try (Connection con = connectDB.getConnection(); 
+//             PreparedStatement pst = con.prepareStatement(sql); 
+//             ResultSet rs = pst.executeQuery()) {
+//            if (rs.next()) {
+//                return rs.getString("maxMaKH");
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+    
+    public String getMaxMaKH() {
+        String sql = "SELECT TOP 1 maKH FROM KhachHang ORDER BY CAST(SUBSTRING(maKH, 3, LEN(maKH) - 2) AS INT) DESC";
+        try (Connection con = connectDB.getConnection();
+             PreparedStatement pst = con.prepareStatement(sql);
+             ResultSet rs = pst.executeQuery()) {
+            if (rs.next()) {
+                return rs.getString("maKH");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    public String generateMaKH() {
+        String maxMaNV = getMaxMaKH();
+        if (maxMaNV == null) {
+            return "KH00001";
+        }
+        
+        int num = Integer.parseInt(maxMaNV.substring(2));
+        num++;
+
+        return String.format("KH%05d", num);
     }
 
     // Method to update a customer

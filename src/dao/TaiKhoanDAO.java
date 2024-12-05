@@ -49,6 +49,23 @@ public class TaiKhoanDAO {
 	    return role;
 	}
 
+    public static boolean changePassword(String email, String password) {
+        String sql = "UPDATE TaiKhoan SET matKhau = ? from NhanVien WHERE TaiKhoan.taiKhoan = NhanVien.taiKhoanId and NhanVien.gmail = ?";
+        try (Connection con = connectDB.getConnection();
+            PreparedStatement statement = con.prepareStatement(sql)) {
+            statement.setString(1, password);
+            statement.setString(2, email);
+
+            int rowsUpdated = statement.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("Update successful!");
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
     public List<TaiKhoan> getAllTK(){
 		List<TaiKhoan> list = new ArrayList<TaiKhoan>();
 		String sql = "select * from TaiKhoan";
