@@ -425,7 +425,7 @@ public class ThemMon extends JFrame implements ActionListener{
 			    System.out.println("Không có ngày nào được chọn");
 			}
 			
-		    PhieuDatBan phieuDatMoi = new PhieuDatBan(maPhieuDatMoi, tenKhachDat, soLuongKhach, LocalDateTime.now(), ghiChu, new NhanVien(maNhanVien));
+		    PhieuDatBan phieuDatMoi = new PhieuDatBan(maPhieuDatMoi, tenKhachDat, soLuongKhach, LocalDateTime.now(), ghiChu,true, new NhanVien(maNhanVien));
 		    phieuDatBanDAO.themPhieuDat(phieuDatMoi);
 		    DefaultTableModel modelMonAnTrenBan = (DefaultTableModel) tbMonAnTrenBan.getModel();
 	
@@ -446,7 +446,7 @@ public class ThemMon extends JFrame implements ActionListener{
 		        }
 		    }
 		    JOptionPane.showMessageDialog(null, "Phiếu đặt và chi tiết phiếu đặt đã được lưu thành công.");
-		    BanDAO.updateThoiGianDatBan(luuMaBan,ngaytao);
+//		    BanDAO.updateThoiGianDatBan(luuMaBan,ngaytao);
 	        BanDAO banDAO = new BanDAO();
 	        if (!banDAO.capNhatTrangThaiBan(lblMaBan.getText(), true)) {
 	            JOptionPane.showMessageDialog(null, "Lỗi khi cập nhật trạng thái bàn.");

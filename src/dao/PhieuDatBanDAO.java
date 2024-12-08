@@ -42,7 +42,7 @@ public class PhieuDatBanDAO {
 	}
 	public boolean themPhieuDat(PhieuDatBan phieuDat) {
 	    Connection connection = null;
-	    String sql = "INSERT INTO PhieuDatBan (maPhieuDat, tenKhachDat, soLuongKhach, ngayDat, ghiChu, maNV) VALUES (?, ?, ?, ?, ?, ?)";
+	    String sql = "INSERT INTO PhieuDatBan (maPhieuDat, tenKhachDat, soLuongKhach, ngayDat, ghiChu,trangThai, maNV) VALUES (?, ?, ?, ?, ?, ?,?)";
 	    
 	    try {
 	        connection = connectDB.getConnection();
@@ -53,7 +53,8 @@ public class PhieuDatBanDAO {
 	        ps.setInt(3, phieuDat.getSoLuongKhach());
 	        ps.setTimestamp(4, java.sql.Timestamp.valueOf(phieuDat.getNgayDat()));
 	        ps.setString(5, phieuDat.getGhiChu());
-	        ps.setString(6, phieuDat.getNhanVien().getMaNV() );
+	        ps.setBoolean(6, true);
+	        ps.setString(7, phieuDat.getNhanVien().getMaNV() );
 
 	        int result = ps.executeUpdate();
 	        return result > 0; // Trả về true nếu thêm thành công
@@ -80,10 +81,11 @@ public class PhieuDatBanDAO {
 	                int soLuongKhach = rs.getInt("soLuongKhach");
 	                LocalDateTime ngayDat = rs.getTimestamp("ngayDat").toLocalDateTime();
 	                String ghiChu = rs.getString("ghiChu");
+	                Boolean trangThai = rs.getBoolean("trangThai");
 	                NhanVien nhanVien = null; // Bạn cần lấy thông tin nhân viên nếu có
 
 	                // Tạo đối tượng PhieuDatBan
-	                phieuDatBan = new PhieuDatBan(maPhieuDat, tenKhachDat, soLuongKhach, ngayDat, ghiChu, nhanVien);
+	                phieuDatBan = new PhieuDatBan(maPhieuDat, tenKhachDat, soLuongKhach, ngayDat, ghiChu,trangThai, nhanVien);
 	            }
 	        }
 	    } catch (SQLException e) {

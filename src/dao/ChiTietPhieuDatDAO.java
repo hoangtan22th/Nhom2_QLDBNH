@@ -20,18 +20,18 @@ public class ChiTietPhieuDatDAO {
 	    
 	    try {
 	        PreparedStatement ps = con.prepareStatement(sql);
-	        ps.setString(1, chiTiet.getPhieuDatBan().getMaPhieuDat()); // Lấy mã phiếu đặt
-	        ps.setString(2, chiTiet.getMonAnUong().getMaMonAnUong()); // Lấy mã món ăn
-	        ps.setInt(3, chiTiet.getSoLuong()); // Lấy số lượng
-	        ps.setString(4, chiTiet.getBan().getMaBan()); // Lấy mã bàn
+	        ps.setString(1, chiTiet.getPhieuDatBan().getMaPhieuDat()); 
+	        ps.setString(2, chiTiet.getMonAnUong().getMaMonAnUong()); 
+	        ps.setInt(3, chiTiet.getSoLuong()); 
+	        ps.setString(4, chiTiet.getBan().getMaBan()); 
 
-	        return ps.executeUpdate() > 0; // Trả về true nếu thêm thành công
+	        return ps.executeUpdate() > 0; 
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    } finally {
 	        connectDB.closeConnection(con);
 	    }
-	    return false; // Trả về false nếu thêm thất bại
+	    return false; 
 	}
 	public List<ChiTietPhieuDat> layChiTietPhieuDat(String maBan) {
 	    List<ChiTietPhieuDat> chiTietList = new ArrayList<>();
@@ -47,14 +47,13 @@ public class ChiTietPhieuDatDAO {
 	                int soLuong = rs.getInt("soLuong");
 	                String maMonAn = rs.getString("maMonAnUong");
 
-	                // Lấy thông tin món ăn từ mã món ăn
+	                
 	                MonAnUongDAO maud= new MonAnUongDAO();
-	                MonAnUong monAnUong = maud.layMonAnUong(maMonAn); // Đảm bảo rằng phương thức này được định nghĩa
+	                MonAnUong monAnUong = maud.layMonAnUong(maMonAn); 
 
-	                // Thêm vào danh sách
-	                chiTietList.add(new ChiTietPhieuDat(soLuong, monAnUong,null,null)); // Giả định bạn có constructor như vậy
-	            }
-	        }
+	           
+	                chiTietList.add(new ChiTietPhieuDat(soLuong, monAnUong,null,null)); 
+	        }}
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
@@ -62,10 +61,10 @@ public class ChiTietPhieuDatDAO {
 	    return chiTietList;
 	}
 
+	}
 
 
 
 
 
 
-}
