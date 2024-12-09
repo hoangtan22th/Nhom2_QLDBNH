@@ -193,7 +193,7 @@ public class PanelNhaHangMenu2 extends JPanel implements ActionListener {
 //		                               ", Trạng thái: " + (ban.isTrangThai() ? "Đã đặt" : "Chưa đặt") +
 //		                               ", Loại bàn: " + (ban.getLoaiBan() ? "VIP" : "Thường") +
 //		                               ", Thời gian đặt: " + ban.getThoiGianDatBan());
-		        	JOptionPane.showMessageDialog(null, "Bạn đã chọn bàn: "+ban.getTenBan());
+//		        	JOptionPane.showMessageDialog(null, "Bạn đã chọn bàn: "+ban.getTenBan());
 		            ThemMon.luuMaBan = ban.getMaBan();
 		     
 		        }

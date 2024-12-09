@@ -179,9 +179,13 @@ public class ChuyenBan extends JFrame implements ActionListener {
 	                String maTuBan = maTuBans.get(0);
 	                String maDenBan = maDenBans.get(0);
 	                try {
-	                    banDAO.chuyenBan(maTuBan, maDenBan);
-	                    banDAO.capNhatTrangThaiBan(maTuBan, false);
-	                    banDAO.capNhatTrangThaiBan(maDenBan, true);
+	                    boolean chuyenThanhCong = banDAO.chuyenBan(maTuBan, maDenBan);
+
+	                    if (chuyenThanhCong) {
+	                        // Chỉ cập nhật trạng thái nếu chuyển bàn thành công
+	                        banDAO.capNhatTrangThaiBan(maTuBan, false);
+	                        banDAO.capNhatTrangThaiBan(maDenBan, true);
+	                    }
 	                } catch (SQLException e1) {
 	                    e1.printStackTrace();
 	                }
@@ -193,5 +197,6 @@ public class ChuyenBan extends JFrame implements ActionListener {
 	        }
 	    }
 	}
+
 }
 //test

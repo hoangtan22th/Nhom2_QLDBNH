@@ -89,7 +89,7 @@ public class Menu extends JFrame implements ActionListener {
         jMenuThongKe.setIcon(new ImageIcon(new ImageIcon("img/iconThongKe.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
         jMenuThongKe.setForeground(Color.WHITE);
         itemThongKe1 = new JMenuItem("xxx");
-        itemThongKe2 = new JMenuItem("yyy");
+        itemThongKe2 = new JMenuItem("Thống kê món ăn bán chạy");
         jMenuThongKe.add(itemThongKe1);
         jMenuThongKe.add(itemThongKe2);
         jMenuBar.add(jMenuThongKe);
@@ -174,6 +174,7 @@ public class Menu extends JFrame implements ActionListener {
         contentPanel.add(new PanelQLMonAn(), "QLMonAn");
         contentPanel.add(new PanelTaiKhoanMenu(), "QLTaiKhoan");
         contentPanel.add(new PanelTimKiem(),"QLTimKiem");
+        contentPanel.add(new PanelThongKeMonAn(),"ThongKeMonAn");
 
         // Tài Khoản
         
@@ -214,7 +215,9 @@ public class Menu extends JFrame implements ActionListener {
 			cardLayout.show(contentPanel, "QLTaiKhoan");
 		} else if(e.getSource()== itemTimKiem) {
 			cardLayout.show(contentPanel, "QLTimKiem");
-		} 
+		} else if(e.getSource()== itemThongKe2) {
+			cardLayout.show(contentPanel, "ThongKeMonAn");
+		}
         
         
     }

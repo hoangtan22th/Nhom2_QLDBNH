@@ -266,7 +266,7 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 			btnBan.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					JOptionPane.showMessageDialog(null, "Bạn đã chọn bàn: " + ban.getTenBan());
+//					JOptionPane.showMessageDialog(null, "Bạn đã chọn bàn: " + ban.getTenBan());
 					ThemMon.luuMaBan = ban.getMaBan();
 
 					if (ban.isTrangThai()) {
@@ -344,7 +344,7 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 				btnBan.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						JOptionPane.showMessageDialog(null, "Bạn đã chọn bàn: " + ban.getTenBan());
+//						JOptionPane.showMessageDialog(null, "Bạn đã chọn bàn: " + ban.getTenBan());
 						ThemMon.luuMaBan = ban.getMaBan();
 
 						if (ban.isTrangThai()) {

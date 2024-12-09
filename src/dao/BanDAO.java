@@ -1,6 +1,7 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -283,7 +284,7 @@ public class BanDAO {
 
 		    return maBans;
 		}
-	    public void chuyenBan(String tuBan, String denBan) throws SQLException {
+	    public boolean chuyenBan(String tuBan, String denBan) throws SQLException {
 	        String checkTuBanSql = "SELECT maBan FROM ChiTietPhieuDat WHERE maBan = ?";
 	        String checkBanSql = "SELECT maBan FROM Ban WHERE maBan = ?";
 	        String checkDenBanSql = "SELECT maBan FROM ChiTietPhieuDat WHERE maBan = ?";
@@ -294,9 +295,10 @@ public class BanDAO {
 	             PreparedStatement checkBanPs = con.prepareStatement(checkBanSql);
 	             PreparedStatement checkDenBanPs = con.prepareStatement(checkDenBanSql);
 	             PreparedStatement updatePs = con.prepareStatement(updateSql)) {
-	            
+
 	            con.setAutoCommit(false);
 
+	            // Kiểm tra bàn cũ (tuBan)
 	            checkTuBanPs.setString(1, tuBan);
 	            ResultSet rsTuBan = checkTuBanPs.executeQuery();
 	            boolean tuBanInChiTietPhieuDat = rsTuBan.next();
@@ -305,24 +307,29 @@ public class BanDAO {
 	            boolean tuBanInBan = rsBan.next();
 	            if (!tuBanInChiTietPhieuDat || !tuBanInBan) {
 	                JOptionPane.showMessageDialog(null, "Bàn cũ không có trong ChiTietPhieuDat hoặc bảng Ban, không thể chuyển.");
-	                return;
+	                return false;
 	            }
+
+	            // Kiểm tra bàn mới (denBan)
 	            checkDenBanPs.setString(1, denBan);
 	            ResultSet rsDenBan = checkDenBanPs.executeQuery();
 	            if (rsDenBan.next()) {
 	                JOptionPane.showMessageDialog(null, "Bàn mới đã có trong ChiTietPhieuDat, không thể chuyển tới.");
-	                return;
+	                return false;
 	            }
+
+	            // Cập nhật
 	            updatePs.setString(1, denBan);
 	            updatePs.setString(2, tuBan);
 	            int rowsAffected = updatePs.executeUpdate();
 
 	            if (rowsAffected > 0) {
-	                con.commit(); 
+	                con.commit();
 	                JOptionPane.showMessageDialog(null, "Chuyển bàn thành công từ bàn " + tuBan + " sang bàn " + denBan);
-	                
+	                return true;
 	            } else {
 	                JOptionPane.showMessageDialog(null, "Chuyển bàn thất bại.");
+	                return false;
 	            }
 
 	        } catch (SQLException ex) {
@@ -330,6 +337,7 @@ public class BanDAO {
 	            throw ex;
 	        }
 	    }
+
 	    public static boolean updateThoiGianDatBan(String maBan, LocalDateTime thoiGianDatBan) {
 	        String sql = "UPDATE Ban SET thoiGianDatBan = ? WHERE maBan = ?";
 
@@ -351,6 +359,114 @@ public class BanDAO {
 	            return false;
 	        }
 	    }
+	    public boolean ghepBan(String tuBan, String denBan) {
+	        Connection conn = null;
 
+	        try {
+	            // 1. Kết nối cơ sở dữ liệu
+	            conn = connectDB.getConnection();
+	            conn.setAutoCommit(false); // Bắt đầu transaction
+
+	            // 2. Lấy thông tin phiếu đặt của bàn gốc
+	            String queryGetPhieuDat = "SELECT maPhieuDat FROM PhieuDatBan WHERE maPhieuDat IN " +
+	                                      "(SELECT maPhieuDat FROM ChiTietPhieuDat WHERE maBan = ?)";
+	            PreparedStatement psTuBan = conn.prepareStatement(queryGetPhieuDat);
+	            psTuBan.setString(1, tuBan);
+	            ResultSet rsTuBan = psTuBan.executeQuery();
+
+	            if (!rsTuBan.next()) {
+	                JOptionPane.showMessageDialog(null, "Không tìm thấy phiếu đặt cho bàn gốc: " + tuBan);
+	                return false;
+	            }
+
+	            String maPhieuDatTuBan = rsTuBan.getString("maPhieuDat");
+
+	            // Lấy thông tin phiếu đặt của bàn đích
+	            PreparedStatement psDenBan = conn.prepareStatement(queryGetPhieuDat);
+	            psDenBan.setString(1, denBan);
+	            ResultSet rsDenBan = psDenBan.executeQuery();
+
+	            if (!rsDenBan.next()) {
+	                JOptionPane.showMessageDialog(null, "Không tìm thấy phiếu đặt cho bàn đích: " + denBan);
+	                return false;
+	            }
+
+	            String maPhieuDatDenBan = rsDenBan.getString("maPhieuDat");
+
+	            // 3. Chuyển tất cả món ăn từ bàn gốc sang bàn đích
+	            String queryGetChiTiet = "SELECT maMonAnUong, soLuong FROM ChiTietPhieuDat WHERE maPhieuDat = ?";
+	            PreparedStatement psGetChiTiet = conn.prepareStatement(queryGetChiTiet);
+	            psGetChiTiet.setString(1, maPhieuDatTuBan);
+	            ResultSet rsChiTiet = psGetChiTiet.executeQuery();
+
+	            while (rsChiTiet.next()) {
+	                String maMonAnUong = rsChiTiet.getString("maMonAnUong");
+	                int soLuongTuBan = rsChiTiet.getInt("soLuong");
+
+	                // Kiểm tra xem món ăn đã tồn tại ở bàn đích chưa
+	                String queryCheckMonAn = "SELECT soLuong FROM ChiTietPhieuDat WHERE maPhieuDat = ? AND maMonAnUong = ?";
+	                try (PreparedStatement psCheck = conn.prepareStatement(queryCheckMonAn)) {
+	                    psCheck.setString(1, maPhieuDatDenBan);
+	                    psCheck.setString(2, maMonAnUong);
+	                    try (ResultSet rsCheck = psCheck.executeQuery()) {
+	                        if (rsCheck.next()) {
+	                            // Nếu món ăn đã tồn tại, cập nhật số lượng
+	                            int soLuongDenBan = rsCheck.getInt("soLuong");
+	                            String queryUpdateMonAn = "UPDATE ChiTietPhieuDat SET soLuong = ? WHERE maPhieuDat = ? AND maMonAnUong = ?";
+	                            try (PreparedStatement psUpdate = conn.prepareStatement(queryUpdateMonAn)) {
+	                                psUpdate.setInt(1, soLuongDenBan + soLuongTuBan);
+	                                psUpdate.setString(2, maPhieuDatDenBan);
+	                                psUpdate.setString(3, maMonAnUong);
+	                                psUpdate.executeUpdate();
+	                            }
+	                        } else {
+	                            // Nếu món ăn chưa tồn tại, thêm mới vào bàn đích
+	                            String queryInsertMonAn = "INSERT INTO ChiTietPhieuDat (maPhieuDat, maBan, maMonAnUong, soLuong) VALUES (?, ?, ?, ?)";
+	                            try (PreparedStatement psInsert = conn.prepareStatement(queryInsertMonAn)) {
+	                                psInsert.setString(1, maPhieuDatDenBan);
+	                                psInsert.setString(2, denBan);
+	                                psInsert.setString(3, maMonAnUong);
+	                                psInsert.setInt(4, soLuongTuBan);
+	                                psInsert.executeUpdate();
+	                            }
+	                        }
+	                    }
+	                }
+	            }
+
+
+	            // 4. Xóa tất cả chi tiết phiếu đặt của bàn gốc
+	            String queryDeleteChiTiet = "DELETE FROM ChiTietPhieuDat WHERE maPhieuDat = ?";
+	            PreparedStatement psDeleteChiTiet = conn.prepareStatement(queryDeleteChiTiet);
+	            psDeleteChiTiet.setString(1, maPhieuDatTuBan);
+	            psDeleteChiTiet.executeUpdate();
+
+	            // 5. Xóa phiếu đặt của bàn gốc
+	            String queryDeletePhieuDat = "DELETE FROM PhieuDatBan WHERE maPhieuDat = ?";
+	            PreparedStatement psDeletePhieuDat = conn.prepareStatement(queryDeletePhieuDat);
+	            psDeletePhieuDat.setString(1, maPhieuDatTuBan);
+	            psDeletePhieuDat.executeUpdate();
+
+	            // 6. Commit transaction
+	            conn.commit();
+	            JOptionPane.showMessageDialog(null, "Ghép bàn thành công");
+	            return true;
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            try {
+	                if (conn != null) conn.rollback();
+	            } catch (SQLException ex) {
+	                ex.printStackTrace();
+	            }
+	            return false;
+	        } finally {
+	            try {
+	                if (conn != null) conn.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
 
 }
