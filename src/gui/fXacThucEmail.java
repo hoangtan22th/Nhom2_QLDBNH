@@ -52,8 +52,8 @@ public class fXacThucEmail extends javax.swing.JFrame {
             Random rand = new Random();
             randomCode = rand.nextInt(999999);
             String host = "smtp.gmail.com";
-            String user = "taduchoanbackup@gmail.com";
-            String password = "atth gcxd fgwl othh";
+            String user = "m0tnamk09@gmail.com";
+            String password = "hbyr ivit mjzp wkty";
             String to = email;
             String subject = "Đổi mật khẩu";
             String message = "Mã code của bạn là " + randomCode;
