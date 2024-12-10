@@ -16,5 +16,6 @@
 	<classpathentry kind="lib" path="com.jgoodies.common_1.8.1.v20240327-0800.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/activation.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/mail.jar"/>
+	<classpathentry kind="lib" path="lib/jcalendar_1.0.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

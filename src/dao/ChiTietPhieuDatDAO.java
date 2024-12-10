@@ -33,7 +33,7 @@ public class ChiTietPhieuDatDAO {
 	    }
 	    return false; 
 	}
-	public List<ChiTietPhieuDat> layChiTietPhieuDat(String maBan) {
+	public List<ChiTietPhieuDat> layAllChiTietPhieuDat(String maBan) {
 	    List<ChiTietPhieuDat> chiTietList = new ArrayList<>();
 	    String query = "SELECT soLuong, maMonAnUong FROM ChiTietPhieuDat WHERE maBan = ?";
 
@@ -60,9 +60,45 @@ public class ChiTietPhieuDatDAO {
 
 	    return chiTietList;
 	}
+	public List<ChiTietPhieuDat> layChiTietPhieuDat(String maBan) {
+	    List<ChiTietPhieuDat> chiTietList = new ArrayList<>();
+	    // Truy vấn lấy chi tiết phiếu đặt từ bảng ChiTietPhieuDat khi trạng thái phiếu đặt = 1
+	    String query = "SELECT ctpd.soLuong, ctpd.maMonAnUong " +
+	                   "FROM ChiTietPhieuDat ctpd " +
+	                   "JOIN PhieuDatBan pdb ON ctpd.maPhieuDat = pdb.maPhieuDat " +
+	                   "WHERE ctpd.maBan = ? AND pdb.trangThai = 1";
 
+	    try (Connection con = connectDB.getConnection(); 
+	         PreparedStatement stmt = con.prepareStatement(query)) {
+
+	        // Set giá trị mã bàn vào truy vấn
+	        stmt.setString(1, maBan);
+
+	        try (ResultSet rs = stmt.executeQuery()) {
+	            // Duyệt qua kết quả trả về và thêm chi tiết vào danh sách
+	            while (rs.next()) {
+	                int soLuong = rs.getInt("soLuong");
+	                String maMonAn = rs.getString("maMonAnUong");
+
+	                // Lấy chi tiết món ăn từ DAO
+	                MonAnUongDAO maud = new MonAnUongDAO();
+	                MonAnUong monAnUong = maud.layMonAnUong(maMonAn);
+
+	                // Thêm vào danh sách kết quả
+	                chiTietList.add(new ChiTietPhieuDat(soLuong, monAnUong, null, null));
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return chiTietList;
 	}
 
+
+
+	
+	}
 
 
 

@@ -247,23 +247,64 @@ public class BanDAO {
 	        
 	        return trangThai;
 	    }
+//	    public void huyDatBan(String maBan) {
+//	        String updateBanSql = "UPDATE Ban SET trangThai = 0 WHERE maBan = ?"; // 0 tương ứng với trạng thái chưa đặt
+//	        try (Connection conn = connectDB.getConnection();
+//	             PreparedStatement ps = conn.prepareStatement(updateBanSql)) {
+//	            ps.setString(1, maBan);
+//	            int rowsUpdated = ps.executeUpdate();
+//	            
+//	            if (rowsUpdated > 0) {
+//	                System.out.println("Cập nhật trạng thái bàn thành công.");
+//	            } else {
+//	                System.out.println("Không tìm thấy bàn để cập nhật.");
+//	            }
+//	        } catch (SQLException e) {
+//	            e.printStackTrace();
+//	           
+//	        }
+//	    }
 	    public void huyDatBan(String maBan) {
-	        String updateBanSql = "UPDATE Ban SET trangThai = 0 WHERE maBan = ?"; // 0 tương ứng với trạng thái chưa đặt
+	        // Câu lệnh cập nhật trạng thái bàn
+	        String updateBanSql = "UPDATE Ban SET trangThai = 0 WHERE maBan = ?";
+	        
+	        // Câu lệnh cập nhật trạng thái phiếu đặt
+	        String updatePhieuDatSql = "UPDATE PhieuDatBan SET trangThai = 0 WHERE maPhieuDat IN (" +
+	                                   "SELECT maPhieuDat FROM ChiTietPhieuDat WHERE maBan = ?)";
+
 	        try (Connection conn = connectDB.getConnection();
-	             PreparedStatement ps = conn.prepareStatement(updateBanSql)) {
-	            ps.setString(1, maBan);
-	            int rowsUpdated = ps.executeUpdate();
+	             PreparedStatement psUpdateBan = conn.prepareStatement(updateBanSql);
+	             PreparedStatement psUpdatePhieuDat = conn.prepareStatement(updatePhieuDatSql)) {
 	            
-	            if (rowsUpdated > 0) {
+	            conn.setAutoCommit(false); // Bắt đầu transaction
+	            
+	            // 1. Cập nhật trạng thái bàn
+	            psUpdateBan.setString(1, maBan);
+	            int rowsUpdatedBan = psUpdateBan.executeUpdate();
+	            
+	            if (rowsUpdatedBan > 0) {
 	                System.out.println("Cập nhật trạng thái bàn thành công.");
 	            } else {
 	                System.out.println("Không tìm thấy bàn để cập nhật.");
 	            }
+
+	            // 2. Cập nhật trạng thái phiếu đặt liên quan
+	            psUpdatePhieuDat.setString(1, maBan);
+	            int rowsUpdatedPhieuDat = psUpdatePhieuDat.executeUpdate();
+	            
+	            if (rowsUpdatedPhieuDat > 0) {
+	                System.out.println("Cập nhật trạng thái phiếu đặt thành công.");
+	            } else {
+	                System.out.println("Không tìm thấy phiếu đặt liên quan để cập nhật.");
+	            }
+	            
+	            conn.commit(); // Xác nhận transaction
 	        } catch (SQLException e) {
 	            e.printStackTrace();
-	           
+	            
 	        }
 	    }
+
 	    public List<String> getMaBanTheoTen(String tenBan) {
 		    List<String> maBans = new ArrayList<>();
 		    String sql = "SELECT maBan FROM Ban WHERE tenBan LIKE ?";
