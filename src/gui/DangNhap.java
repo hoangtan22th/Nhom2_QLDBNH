@@ -80,13 +80,13 @@ public class DangNhap extends JFrame implements ActionListener{
         btnDangNhap.setMaximumSize(buttonSize); 
         
         btnQuenMatKhau = new JButton("Quên mật khẩu");
-        btnQuenMatKhau.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		fXacThucEmail form = new fXacThucEmail();
-        		form.setVisible(true); // Hiển thị giao diện
-        		dispose();
-        	}
-        });
+//        btnQuenMatKhau.addActionListener(new ActionListener() {
+//        	public void actionPerformed(ActionEvent e) {
+//        		fXacThucEmail form = new fXacThucEmail();
+//        		form.setVisible(true); // Hiển thị giao diện
+//        		dispose();
+//        	}
+//        });
         btnQuenMatKhau.setPreferredSize(buttonSize);
         btnQuenMatKhau.setBackground(Color.decode("#E28D0E")); 
         btnQuenMatKhau.setForeground(Color.WHITE); 

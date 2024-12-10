@@ -40,6 +40,7 @@ import entity.PhieuDatBan;
 
 import javax.swing.JTextArea;
 import java.awt.event.ActionListener;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -66,6 +67,8 @@ public class ThemMon extends JFrame implements ActionListener{
 	private JTextArea txtGhiChu;
 	public static String luuMaBan;
 	private JTextField textField;
+	private JLabel lblTienCoc;
+	private JTextField txtTienCoc;
 	public static LocalDateTime ngaytao;
 	/**
 	 * Launch the application.
@@ -189,6 +192,7 @@ public class ThemMon extends JFrame implements ActionListener{
         // Đặt kích thước và font chữ cho trường nhập ngày
         datePicker.getJFormattedTextField().setPreferredSize(new Dimension(100, 35));
         datePicker.getJFormattedTextField().setFont(new Font("Arial", Font.PLAIN, 15));
+        
 		tbMonAnTrenBan = new JTable();
 		tbMonAnTrenBan.setRowHeight(30); 
 		tbMonAnTrenBan.setModel(new DefaultTableModel(
@@ -201,6 +205,7 @@ public class ThemMon extends JFrame implements ActionListener{
 		));
 		tbMonAnTrenBan.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		scrollPane.setViewportView(tbMonAnTrenBan);
+		
 		panel.setLayout(null);
 		panel.add(lblBanDat);
 		panel.add(lblMaBan);
@@ -220,17 +225,17 @@ public class ThemMon extends JFrame implements ActionListener{
 		txtGhiChu.setBounds(10, 256, 427, 52);
 		panel.add(txtGhiChu);
 		
-		JLabel jLabel11_1_1 = new JLabel();
-		jLabel11_1_1.setText("Tiền cọc");
-		jLabel11_1_1.setForeground(new Color(0, 51, 255));
-		jLabel11_1_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		jLabel11_1_1.setBounds(10, 319, 88, 17);
-		panel.add(jLabel11_1_1);
+		lblTienCoc = new JLabel();
+		lblTienCoc.setText("Tiền cọc");
+		lblTienCoc.setForeground(new Color(0, 51, 255));
+		lblTienCoc.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblTienCoc.setBounds(10, 319, 88, 17);
+		panel.add(lblTienCoc);
 		
-		textField = new JTextField();
-		textField.setBounds(12, 339, 119, 25);
-		panel.add(textField);
-		textField.setColumns(10);
+		txtTienCoc = new JTextField();
+		txtTienCoc.setBounds(12, 339, 119, 25);
+		panel.add(txtTienCoc);
+		txtTienCoc.setColumns(10);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(482, 11, 800, 706);
@@ -405,6 +410,7 @@ public class ThemMon extends JFrame implements ActionListener{
 		    int soLuongKhach = Integer.parseInt(txtSoKhach.getText().trim());
 		    String ghiChu = txtGhiChu.getText().trim();
 		    String maNhanVien = "admin";
+		    float tienCoc = Float.parseFloat(txtTienCoc.getText());
 		    
 		    if (tenKhachDat.isEmpty() || soLuongKhach <= 0) {
 		        JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ thông tin khách đặt và mã nhân viên.");
@@ -424,12 +430,13 @@ public class ThemMon extends JFrame implements ActionListener{
 			} else {
 			    System.out.println("Không có ngày nào được chọn");
 			}
-			
-		    PhieuDatBan phieuDatMoi = new PhieuDatBan(maPhieuDatMoi, tenKhachDat, soLuongKhach, LocalDateTime.now(), ghiChu,true, new NhanVien(maNhanVien));
+		  
+		    PhieuDatBan phieuDatMoi = new PhieuDatBan(maPhieuDatMoi, tenKhachDat, soLuongKhach, Timestamp.valueOf(LocalDateTime.now()), ghiChu,tienCoc,null,true, new NhanVien(maNhanVien));
 		    phieuDatBanDAO.themPhieuDat(phieuDatMoi);
 		    DefaultTableModel modelMonAnTrenBan = (DefaultTableModel) tbMonAnTrenBan.getModel();
 	
 		    ChiTietPhieuDatDAO chiTietPhieuDatDAO = new ChiTietPhieuDatDAO();
+		    
 		    for (int i = 0; i < modelMonAnTrenBan.getRowCount(); i++) {
 		        String maMonAn = (String) modelMonAnTrenBan.getValueAt(i, 1);
 		        int soLuongMon = (int) modelMonAnTrenBan.getValueAt(i, 5); 
