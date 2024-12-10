@@ -139,7 +139,25 @@ public class PhieuDatBanDAO {
 
         return result;
     }
+	 
+    public boolean setTrangThai(String maPhieuDat, boolean trangThai) {
+        String sql = "UPDATE PhieuDatBan SET trangThai = ? WHERE maPhieuDat = ?";
 
+        try (Connection con = connectDB.getConnection(); 
+   	         PreparedStatement stmt = con.prepareStatement(sql)){
+        	
+            stmt.setBoolean(1, trangThai);
+            stmt.setString(2, maPhieuDat);     
+
+  
+            int rowsUpdated = stmt.executeUpdate();
+
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
 
 

@@ -384,6 +384,11 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 			
 			
 		}
+		else if(e.getSource()==btnHuyDatBan) {
+			BanDAO bd = new BanDAO();
+			bd.huyDatBan(ThemMon.luuMaBan);
+			JOptionPane.showMessageDialog(this, "Huỷ đặt bàn thành công!");
+		}
 		else if (e.getSource() == cbThuong) {
 
 			 String selectedKhu = (String) cbThuong.getSelectedItem();

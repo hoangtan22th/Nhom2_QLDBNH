@@ -32,6 +32,8 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -48,7 +50,7 @@ import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.JTextArea;
 
-public class PhieuDat extends JFrame implements ActionListener {
+public class PhieuDat extends JFrame implements ActionListener,MouseListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel panelChinh;
@@ -82,6 +84,8 @@ public class PhieuDat extends JFrame implements ActionListener {
 	private JButton btnChonMon;
 	private JTextArea txtAGhiChu;
 	public static DefaultTableModel modelMonAnTrenBan;
+	private JTextField txtTrangThai;
+	private JTextField txtPhieuDat;
 
 	/**
 	 * Launch the application.
@@ -115,7 +119,7 @@ public class PhieuDat extends JFrame implements ActionListener {
 		JLabel lblPhieuDat = new JLabel("Phiếu Đặt");
 		lblPhieuDat.setForeground(new Color(30, 144, 255));
 		lblPhieuDat.setFont(new Font("Tahoma", Font.PLAIN, 22));
-		lblPhieuDat.setBounds(296, 11, 131, 50);
+		lblPhieuDat.setBounds(161, 11, 131, 50);
 		panelChinh.add(lblPhieuDat);
 		
 		JLabel lblNewLabel = new JLabel("Tên nhân viên:");
@@ -249,7 +253,7 @@ public class PhieuDat extends JFrame implements ActionListener {
         btnChonMon.setForeground(Color.WHITE);
         btnChonMon.setFont(new Font("Tahoma", Font.PLAIN, 14));
         btnChonMon.setBackground(new Color(255, 140, 0));
-        btnChonMon.setBounds(21, 317, 105, 35);
+        btnChonMon.setBounds(21, 306, 105, 50);
         panelChinh.add(btnChonMon);
         
         tbMonAnTrenBan = new JTable();
@@ -268,7 +272,7 @@ public class PhieuDat extends JFrame implements ActionListener {
 
 		tbMonAnTrenBan.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(21, 385, 592, 479);
+		scrollPane_1.setBounds(21, 446, 592, 479);
 		panelChinh.add(scrollPane_1);
 		
 		scrollPane_1.setViewportView(tbMonAnTrenBan);
@@ -374,6 +378,7 @@ public class PhieuDat extends JFrame implements ActionListener {
         
         hienThiDanhSachPhieuDat();
         
+        
         btnDatBan.addActionListener(this);
         btnChonMon.addActionListener(this);
         btnChonBan.addActionListener(this);
@@ -381,20 +386,21 @@ public class PhieuDat extends JFrame implements ActionListener {
 	// Giả sử bạn đã có đối tượng tbDanhSachPhieuDat là một JTable và phương thức layTatCaChiTietPhieuDat_Join()
 
 	public void hienThiDanhSachPhieuDat() {
-	    // Lấy danh sách chi tiết phiếu đặt từ cơ sở dữ liệu
-	    PhieuDatBanDAO ctpdd = new PhieuDatBanDAO();  // Đảm bảo kết nối cơ sở dữ liệu được truyền vào DAO
+		
+
+	    DefaultTableModel model = (DefaultTableModel) tbDanhSachPhieuDat.getModel();
+	    model.setRowCount(0); 
+
+	    PhieuDatBanDAO ctpdd = new PhieuDatBanDAO(); // Đảm bảo kết nối cơ sở dữ liệu được truyền vào DAO
 	    List<Object[]> chiTietPhieuDatList = ctpdd.layTatCaPhieuDatBan();
 
-	    // Chuẩn bị dữ liệu cho bảng
 	    Object[][] data = new Object[chiTietPhieuDatList.size()][];
 
 	    for (int i = 0; i < chiTietPhieuDatList.size(); i++) {
-	        // Lấy thông tin từ mỗi phần tử trong danh sách
+	      
 	        Object[] item = chiTietPhieuDatList.get(i);
 	        PhieuDatBan phieuDatBan = (PhieuDatBan) item[0];
 	        Ban ban = (Ban) item[1];
-
-	        // Thêm thông tin vào mảng dữ liệu cho bảng
 	        data[i] = new Object[]{
 	            phieuDatBan.getMaPhieuDat(),
 	            phieuDatBan.getTenKhachDat(),
@@ -406,32 +412,49 @@ public class PhieuDat extends JFrame implements ActionListener {
 	            phieuDatBan.getTienCoc(),
 	        };
 	    }
-
-	    // Cập nhật mô hình bảng
 	    String[] columnNames = {
-	        "Mã phiếu", "Khách hàng", "Số điện thoại", "Thời gian nhận", 
+	        "Mã phiếu", "Khách hàng", "Số điện thoại", "Thời gian nhận",
 	        "Mã bàn", "Tên bàn", "Trạng thái", "Tiền cọc"
 	    };
 
-	    // Tạo mô hình bảng với dữ liệu đã lấy
+	    
 	    DefaultTableModel tableModel = new DefaultTableModel(data, columnNames);
 
-	    // Cập nhật bảng với mô hình mới
 	    tbDanhSachPhieuDat.setModel(tableModel);
 
-	    // Cài đặt các thuộc tính cho bảng
 	    tbDanhSachPhieuDat.setRowHeight(30);
 	    tbDanhSachPhieuDat.setFont(new Font("Tahoma", Font.PLAIN, 14));
 
-	    // Đảm bảo scrollbar được hiển thị
 	    JScrollPane scrollPane_2 = new JScrollPane(tbDanhSachPhieuDat);
-	    scrollPane_2.setBounds(765, 319, 839, 545);  // Bạn có thể điều chỉnh lại vị trí và kích thước nếu cần
+	    scrollPane_2.setBounds(765, 319, 839, 545); 
 	    panelChinh.add(scrollPane_2);
 
-	    // Cập nhật giao diện
+	
 	    scrollPane_2.setViewportView(tbDanhSachPhieuDat);
-	    panelChinh.add(scrollPane_2);
+
+	    JLabel lblTrangThai = new JLabel("Trạng thái:");
+	    lblTrangThai.setFont(new Font("Tahoma", Font.PLAIN, 14));
+	    lblTrangThai.setBounds(21, 382, 105, 29);
+	    panelChinh.add(lblTrangThai);
+
+	    txtTrangThai = new JTextField();
+	    txtTrangThai.setText("");
+	    txtTrangThai.setColumns(10);
+	    txtTrangThai.setBounds(143, 383, 149, 30);
+	    panelChinh.add(txtTrangThai);
+
+	    txtPhieuDat = new JTextField();
+	    txtPhieuDat.setText("");
+	    txtPhieuDat.setColumns(10);
+	    txtPhieuDat.setBounds(279, 11, 149, 45);
+	    panelChinh.add(txtPhieuDat);
+
+	 
+	    tbDanhSachPhieuDat.addMouseListener(this);
+	    btnNhanBan.addActionListener(this);
+	    btnLamMoi.addActionListener(this);
 	}
+
 
 
 	public static void setThongTinPhieuDat(String x) {
@@ -530,7 +553,70 @@ public class PhieuDat extends JFrame implements ActionListener {
 		else if(e.getSource()==btnLamMoi) {
 			hienThiDanhSachPhieuDat();
 		}
+		else if(e.getSource()==btnNhanBan) {
+			PhieuDatBanDAO ptdd = new PhieuDatBanDAO();
+			ptdd.setTrangThai(txtPhieuDat.getText(), true);
+//		    BanDAO.updateThoiGianDatBan(luuMaBan,ngaytao);
+	        BanDAO banDAO = new BanDAO();
+	        if (!banDAO.capNhatTrangThaiBan(txtMaBan.getText(), true)) {
+	            JOptionPane.showMessageDialog(null, "Lỗi khi cập nhật trạng thái bàn.");
+	        } else {
+	            JOptionPane.showMessageDialog(null, "Bàn đã được cập nhật trạng thái.");
+	        }
+			JOptionPane.showMessageDialog(this, "Cập nhât thành công");
+			
+		}
 
 
 		}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		 // Lấy chỉ số dòng được chọn
+        int row = tbDanhSachPhieuDat.getSelectedRow();
+
+        // Lấy giá trị từ các cột trong dòng đã chọn
+        String khachHang = (String)tbDanhSachPhieuDat.getValueAt(row, 1);
+        String maPhieuDat = (String)tbDanhSachPhieuDat.getValueAt(row, 0);
+        Boolean trangThai = (Boolean)tbDanhSachPhieuDat.getValueAt(row, 6);
+        Float tienCoc = (Float) tbDanhSachPhieuDat.getValueAt(row, 7);
+        String soDienThoai = (String) tbDanhSachPhieuDat.getValueAt(row, 2);
+        String maBan = (String) tbDanhSachPhieuDat.getValueAt(row, 4);
+        
+        
+
+        // Cập nhật thông tin vào các JTextField
+        txtPhieuDat.setText(maPhieuDat);
+        txtMaBan.setText(maBan);
+        txtTenKhachHang.setText(khachHang);
+        txtSdt.setText(soDienThoai);
+        txtTienCoc.setText((String.valueOf(tienCoc)));
+        txtTrangThai.setText(String.valueOf(trangThai));
+//        txtTrangThai.setText(trangThai ? "Đã Nhận" : "Chưa Nhận");
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 }
