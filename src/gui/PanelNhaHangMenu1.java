@@ -49,9 +49,10 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 	private JButton btnBan;
 	private JButton btnThemMon;
 	public static String luuTenBan;
-	public String LUUMABAN;
 	private JButton btnHuyDatBan;
 	private JButton btnThemTiepMon;
+	private JButton btnDatBan;
+	private JButton btnThanhToan;
 
 	public PanelNhaHangMenu1() {
 		setBackground(new Color(240, 240, 240));
@@ -113,7 +114,7 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 
 		table.setRowHeight(30);
 
-		DefaultTableModel model = new DefaultTableModel(new Object[][] { { "abc", null, null }
+		DefaultTableModel model = new DefaultTableModel(new Object[][] { { null, null, null }
 
 		}, new String[] { "Số Lượng", "Hàng Bán", "Tiền Hàng" });
 		table.setModel(model);
@@ -180,57 +181,63 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 
 		panel_6 = new JPanel();
 		panel_6.setBackground(new Color(240, 240, 240));
-		panel_6.setBounds(940, 773, 768, 164);
+		panel_6.setBounds(940, 773, 768, 229);
 		add(panel_6);
 		panel_6.setLayout(null);
 		btnChuyenBan = new JButton("Chuyển bàn");
 		btnChuyenBan.setForeground(Color.WHITE);
 		btnChuyenBan.setBackground(new Color(0, 117, 225));
-		btnChuyenBan.setBounds(156, 70, 143, 53);
+		btnChuyenBan.setBounds(10, 70, 163, 53);
 		panel_6.add(btnChuyenBan);
 
 		btnGhepBan = new JButton("Ghép bàn");
 		btnGhepBan.setForeground(Color.WHITE);
 		btnGhepBan.setBackground(new Color(226, 141, 14));
-		btnGhepBan.setBounds(309, 6, 143, 53);
+		btnGhepBan.setBounds(183, 70, 163, 53);
 		panel_6.add(btnGhepBan);
 
 		JButton btnNewButton_16 = new JButton("Tách bàn");
 		btnNewButton_16.setForeground(Color.WHITE);
 
 		btnNewButton_16.setBackground(new Color(226, 141, 14));
-		btnNewButton_16.setBounds(462, 6, 143, 53);
+		btnNewButton_16.setBounds(356, 70, 163, 53);
 		panel_6.add(btnNewButton_16);
 
 		JButton btnPhieuKiemMon = new JButton("Phiếu kiểm món");
 		btnPhieuKiemMon.setForeground(Color.WHITE);
 		btnPhieuKiemMon.setBackground(new Color(209, 14, 226));
-		btnPhieuKiemMon.setBounds(309, 70, 143, 53);
+		btnPhieuKiemMon.setBounds(529, 7, 163, 53);
 		panel_6.add(btnPhieuKiemMon);
 
-		btnThemMon = new JButton("Thêm món");
+		btnThemMon = new JButton("Đặt bàn thêm món");
 		btnThemMon.setForeground(Color.WHITE);
 		btnThemMon.setBackground(new Color(14, 48, 226));
-		btnThemMon.setBounds(0, 6, 146, 53);
+		btnThemMon.setBounds(356, 7, 163, 53);
 		panel_6.add(btnThemMon);
 
 		btnHuyDatBan = new JButton("Huỷ đặt bàn");
 		btnHuyDatBan.setForeground(Color.WHITE);
 		btnHuyDatBan.setBackground(new Color(250, 128, 114));
-		btnHuyDatBan.setBounds(462, 70, 143, 53);
+		btnHuyDatBan.setBounds(529, 70, 163, 53);
 		panel_6.add(btnHuyDatBan);
 
-		btnThemTiepMon = new JButton("Thêm tiếp món ");
+		btnThemTiepMon = new JButton("Thêm món ");
 		btnThemTiepMon.setForeground(Color.WHITE);
 		btnThemTiepMon.setBackground(new Color(14, 48, 226));
-		btnThemTiepMon.setBounds(0, 70, 146, 53);
+		btnThemTiepMon.setBounds(183, 7, 163, 53);
 		panel_6.add(btnThemTiepMon);
 		
-		JButton btnPhiut = new JButton("Phiếu đặt");
-		btnPhiut.setForeground(Color.WHITE);
-		btnPhiut.setBackground(new Color(14, 48, 226));
-		btnPhiut.setBounds(156, 6, 146, 53);
-		panel_6.add(btnPhiut);
+		btnDatBan = new JButton("Đặt bàn");
+		btnDatBan.setForeground(Color.WHITE);
+		btnDatBan.setBackground(new Color(14, 48, 226));
+		btnDatBan.setBounds(10, 7, 163, 53);
+		panel_6.add(btnDatBan);
+		
+		btnThanhToan = new JButton("Thanh toán");
+		btnThanhToan.setForeground(Color.WHITE);
+		btnThanhToan.setBackground(new Color(14, 48, 226));
+		btnThanhToan.setBounds(10, 133, 163, 53);
+		panel_6.add(btnThanhToan);
 
 		btnChuyenBan.addActionListener(this);
 		btnGhepBan.addActionListener(this);
@@ -266,9 +273,9 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 			btnBan.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					JOptionPane.showMessageDialog(null, "Bạn đã chọn bàn: " + ban.getTenBan());
+//					JOptionPane.showMessageDialog(null, "Bạn đã chọn bàn: " + ban.getTenBan());
 					ThemMon.luuMaBan = ban.getMaBan();
-
+					PhieuDat.maBan = ban.getMaBan();
 					if (ban.isTrangThai()) {
 						ChiTietPhieuDatDAO ctpdd = new ChiTietPhieuDatDAO();
 						List<ChiTietPhieuDat> chiTietList = ctpdd.layChiTietPhieuDat(ThemMon.luuMaBan);
@@ -301,7 +308,48 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 
 		btnTatCa.addActionListener(this);
 		btnHuyDatBan.addActionListener(this);
+		btnDatBan.addActionListener(this);
 
+	}
+	private JButton createBanButton(Ban ban) {
+	    String buttonLabel = "<html><center>" + ban.getTenBan() + " - " + ban.getSoChoNgoi() + " chỗ</center></html>";
+
+	    ImageIcon originalIcon = new ImageIcon("img/iconBanAn.png");
+	    Image image = originalIcon.getImage();
+	    Image resizedImage = image.getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH);
+	    ImageIcon resizedIcon = new ImageIcon(resizedImage);
+
+	    JButton btnBan = new JButton(buttonLabel, resizedIcon);
+	    btnBan.setForeground(new Color(255, 255, 255));
+
+	    if (ban.isTrangThai()) {
+	        btnBan.setBackground(new Color(255, 165, 0)); // Màu cam
+	    } else {
+	        btnBan.setBackground(new Color(0, 117, 225)); // Màu xanh
+	    }
+
+	    btnBan.addActionListener(new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            // xử lý sự kiện khi bàn được chọn
+	            JOptionPane.showMessageDialog(null, "Bạn đã chọn bàn: " + ban.getTenBan());
+	        }
+	    });
+
+	    return btnBan;
+	}
+	private void updateBanList(String khuVuc) {
+	    BanDAO banDAO = new BanDAO();
+	    List<Ban> listBan = banDAO.getBansByKhu(khuVuc);
+	    pnDanhSachBan.removeAll();
+
+	    for (Ban ban : listBan) {
+	        JButton btnBan = createBanButton(ban);
+	        pnDanhSachBan.add(btnBan);
+	    }
+
+	    pnDanhSachBan.revalidate(); // Cập nhật giao diện
+	    pnDanhSachBan.repaint();    // Vẽ lại panel
 	}
 
 	@Override
@@ -312,69 +360,19 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 		} else if (e.getSource() == btnGhepBan) {
 
 			new GhepBan().setVisible(true);
-		} else if (e.getSource() == cbThuong) {
-			String selectedKhuTen = cbThuong.getSelectedItem().toString();
+		} 
+		else if(e.getSource() == btnDatBan) {
+			new PhieuDat().setVisible(true);
+			PhieuDat.setThongTinPhieuDat(PhieuDat.maBan);
+			
+			
+			
+		}
+		else if (e.getSource() == cbThuong) {
 
-			BanDAO banDAO = new BanDAO();
-
-			List<Ban> listBan = banDAO.getBansByKhu(selectedKhuTen);
-			Map<String, JButton> mapBan = new HashMap<>();
-			pnDanhSachBan.removeAll();
-			for (Ban ban : listBan) {
-
-				String buttonLabel = "<html><center>" + ban.getTenBan() + " - " + ban.getSoChoNgoi()
-						+ " chỗ</center></html>";
-
-				ImageIcon originalIcon = new ImageIcon("img/iconBanAn.png");
-				Image image = originalIcon.getImage();
-				Image resizedImage = image.getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH);
-				ImageIcon resizedIcon = new ImageIcon(resizedImage);
-				JButton btnBan = new JButton(buttonLabel, resizedIcon);
-				btnBan.setForeground(new Color(255, 255, 255));
-				if (ban.isTrangThai()) {
-					btnBan.setBackground(new Color(255, 165, 0)); // Màu cam
-				} else {
-					btnBan.setBackground(new Color(0, 117, 225)); // Màu xanh
-				}
-
-				pnDanhSachBan.add(btnBan);
-
-				mapBan.put(ban.getTenBan(), btnBan);
-
-				btnBan.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						JOptionPane.showMessageDialog(null, "Bạn đã chọn bàn: " + ban.getTenBan());
-						ThemMon.luuMaBan = ban.getMaBan();
-
-						if (ban.isTrangThai()) {
-							ChiTietPhieuDatDAO ctpdd = new ChiTietPhieuDatDAO();
-							List<ChiTietPhieuDat> chiTietList = ctpdd.layChiTietPhieuDat(ThemMon.luuMaBan);
-
-							// Lấy mô hình bảng
-							DefaultTableModel model = (DefaultTableModel) table.getModel();
-							model.setRowCount(0);
-
-							for (ChiTietPhieuDat chiTiet : chiTietList) {
-								int soLuong = chiTiet.getSoLuong();
-								MonAnUong monAnUong = chiTiet.getMonAnUong();
-
-								model.addRow(new Object[] { soLuong, monAnUong.getTenMonAnUong(),
-										monAnUong.getGiaTien() * soLuong });
-							}
-
-							table.revalidate();
-							table.repaint();
-						} else {
-							DefaultTableModel model = (DefaultTableModel) table.getModel();
-							model.setRowCount(0);
-						}
-					}
-				});
-
-				pnDanhSachBan.revalidate();
-				pnDanhSachBan.repaint();
-			}
+			 String selectedKhu = (String) cbThuong.getSelectedItem();
+		        updateBanList(selectedKhu);
+		
 		} else if (e.getSource() == btnTatCa) {
 			BanDAO banDAO = new BanDAO();
 			List<Ban> bans = banDAO.getAllBans();
@@ -414,6 +412,8 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 
 				bd.huyDatBan(maBan);
 				JOptionPane.showMessageDialog(null, "Đã hủy đặt bàn " + maBan);
+				
+
 			} else {
 
 				JOptionPane.showMessageDialog(null, "Bàn " + maBan + " chưa được đặt.");

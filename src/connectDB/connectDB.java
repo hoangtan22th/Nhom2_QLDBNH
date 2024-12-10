@@ -18,7 +18,7 @@ public class connectDB {
             try {
                 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
                 c = DriverManager.getConnection(url, users[i], passwords[i]);
-                System.out.println("Kết nối thành công với user: " + users[i]);
+//                System.out.println("Kết nối thành công với user: " + users[i]);
                 break; 
             } catch (SQLException e) {
                 

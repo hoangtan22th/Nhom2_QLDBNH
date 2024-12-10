@@ -9,15 +9,18 @@ public class PhieuDatBan {
 	private int soLuongKhach;
 	private LocalDateTime ngayDat;
 	private String ghiChu;
+	private boolean trangThai;
 	private NhanVien nhanVien;
+	
 	public PhieuDatBan(String maPhieuDat, String tenKhachDat, int soLuongKhach, LocalDateTime ngayDat, String ghiChu,
-			NhanVien nhanVien) {
+			boolean trangThai, NhanVien nhanVien) {
 		super();
 		this.maPhieuDat = maPhieuDat;
 		this.tenKhachDat = tenKhachDat;
 		this.soLuongKhach = soLuongKhach;
 		this.ngayDat = ngayDat;
 		this.ghiChu = ghiChu;
+		this.trangThai = trangThai;
 		this.nhanVien = nhanVien;
 	}
 	public String getMaPhieuDat() {
@@ -50,6 +53,12 @@ public class PhieuDatBan {
 	public void setGhiChu(String ghiChu) {
 		this.ghiChu = ghiChu;
 	}
+	public boolean isTrangThai() {
+		return trangThai;
+	}
+	public void setTrangThai(boolean trangThai) {
+		this.trangThai = trangThai;
+	}
 	public NhanVien getNhanVien() {
 		return nhanVien;
 	}
@@ -59,7 +68,9 @@ public class PhieuDatBan {
 	@Override
 	public String toString() {
 		return "PhieuDatBan [maPhieuDat=" + maPhieuDat + ", tenKhachDat=" + tenKhachDat + ", soLuongKhach="
-				+ soLuongKhach + ", ngayDat=" + ngayDat + ", ghiChu=" + ghiChu + ", nhanVien=" + nhanVien + "]";
+				+ soLuongKhach + ", ngayDat=" + ngayDat + ", ghiChu=" + ghiChu + ", trangThai=" + trangThai
+				+ ", nhanVien=" + nhanVien + "]";
 	}
+	
 	
 }

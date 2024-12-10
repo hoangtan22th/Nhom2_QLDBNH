@@ -14,7 +14,8 @@
 	<classpathentry kind="lib" path="com.miglayout.core_11.4.2.jar"/>
 	<classpathentry kind="lib" path="com.jgoodies.forms_1.9.0.v20240327-0800.jar"/>
 	<classpathentry kind="lib" path="com.jgoodies.common_1.8.1.v20240327-0800.jar"/>
-	<classpathentry kind="lib" path="C:/Users/m0tna/OneDrive/Desktop/HocDai/PTUD/PTUD(NEW)/lib/activation.jar"/>
-	<classpathentry kind="lib" path="C:/Users/m0tna/OneDrive/Desktop/HocDai/PTUD/PTUD(NEW)/lib/mail.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/activation.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/mail.jar"/>
+	<classpathentry kind="lib" path="lib/jcalendar_1.0.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

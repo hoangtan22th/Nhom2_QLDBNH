@@ -12,8 +12,12 @@ import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 
+import com.jcalendar.model.JCalModel;
+
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Properties;
 import java.awt.Color;
 import java.awt.Container;
@@ -21,19 +25,21 @@ import java.awt.Dimension;
 
 import javax.swing.JTextField;
 
-public class PhieuDat extends JFrame {
+public class PhieuDat extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel panelChinh;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
+	private JTextField txtTenNhanVien;
+	private JTextField txtTenKhachHang;
+	private JTextField txtSoCho;
 	private JDatePickerImpl datePicker;
 	private JLabel lblSCh_1;
 	private JLabel lblSCh_2;
 	private JLabel lblMBn;
-	private JTextField textField_3;
-
+	private static JTextField txtMaBan;
+	private JTextField txtTienCoc;
+	private JButton btnXacNhan;
+	public static String maBan;
 
 	/**
 	 * Launch the application.
@@ -74,30 +80,30 @@ public class PhieuDat extends JFrame {
 		lblNewLabel.setBounds(21, 135, 105, 30);
 		panelChinh.add(lblNewLabel);
 		
-		textField = new JTextField();
-		textField.setBounds(143, 138, 149, 29);
-		panelChinh.add(textField);
-		textField.setColumns(10);
+		txtTenNhanVien = new JTextField();
+		txtTenNhanVien.setBounds(143, 138, 149, 29);
+		panelChinh.add(txtTenNhanVien);
+		txtTenNhanVien.setColumns(10);
 		
 		JLabel lblTnKhchHng = new JLabel("Tên khách hàng:");
 		lblTnKhchHng.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblTnKhchHng.setBounds(21, 193, 105, 30);
 		panelChinh.add(lblTnKhchHng);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(143, 196, 149, 29);
-		panelChinh.add(textField_1);
+		txtTenKhachHang = new JTextField();
+		txtTenKhachHang.setColumns(10);
+		txtTenKhachHang.setBounds(143, 196, 149, 29);
+		panelChinh.add(txtTenKhachHang);
 		
 		JLabel lblSCh = new JLabel("Số chỗ:");
 		lblSCh.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblSCh.setBounds(322, 193, 105, 30);
 		panelChinh.add(lblSCh);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(464, 193, 149, 29);
-		panelChinh.add(textField_2);
+		txtSoCho = new JTextField();
+		txtSoCho.setColumns(10);
+		txtSoCho.setBounds(464, 193, 149, 29);
+		panelChinh.add(txtSoCho);
 		// Date picker setup
         UtilDateModel modelDate = new UtilDateModel();
         Properties properties = new Properties();
@@ -158,21 +164,54 @@ public class PhieuDat extends JFrame {
         lblSCh_2.setBounds(322, 83, 140, 30);
         panelChinh.add(lblSCh_2);
         
-        JButton btnNewButton = new JButton("Xác nhận");
-        btnNewButton.setBackground(new Color(255, 140, 0));
-        btnNewButton.setForeground(new Color(255, 255, 255));
-        btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        btnNewButton.setBounds(508, 295, 105, 35);
-        panelChinh.add(btnNewButton);
+        btnXacNhan = new JButton("Xác nhận");
+        btnXacNhan.setBackground(new Color(255, 140, 0));
+        btnXacNhan.setForeground(new Color(255, 255, 255));
+        btnXacNhan.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        btnXacNhan.setBounds(508, 295, 105, 35);
+        panelChinh.add(btnXacNhan);
         
         lblMBn = new JLabel("Mã bàn:");
         lblMBn.setFont(new Font("Tahoma", Font.PLAIN, 14));
         lblMBn.setBounds(21, 78, 105, 30);
         panelChinh.add(lblMBn);
         
-        textField_3 = new JTextField();
-        textField_3.setColumns(10);
-        textField_3.setBounds(143, 78, 149, 29);
-        panelChinh.add(textField_3);
+        txtMaBan = new JTextField();
+        
+        txtMaBan.setColumns(10);
+        txtMaBan.setBounds(143, 78, 149, 29);
+        panelChinh.add(txtMaBan);
+        
+        JLabel lblNewLabel_1 = new JLabel("Tiền cọc:");
+        lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        lblNewLabel_1.setBounds(21, 245, 105, 29);
+        panelChinh.add(lblNewLabel_1);
+        
+        txtTienCoc = new JTextField();
+        txtTienCoc.setBounds(143, 247, 149, 30);
+        panelChinh.add(txtTienCoc);
+        txtTienCoc.setColumns(10);
+        
+       
+    
+        
+        
+        
+        
+	}
+	public static void setThongTinPhieuDat(String x) {
+		txtMaBan.setText(x);
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if(e.getSource()==btnXacNhan) {
+			String tenKhachHang = txtTenKhachHang.getText();
+			int soCho = Integer.parseInt(txtSoCho.getText());
+			float tienCoc = Float.parseFloat(txtTienCoc.getText());
+			
+			
+		}
+		
 	}
 }
