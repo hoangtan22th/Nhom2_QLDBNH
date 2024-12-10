@@ -2,6 +2,8 @@ package gui;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.Label;
 import java.awt.event.ActionEvent;
@@ -10,6 +12,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.swing.SwingConstants;
 import java.awt.Color;
@@ -38,7 +41,15 @@ public class PanelKhachHang extends JPanel {
     public PanelKhachHang() {
         setLayout(null);
         khachHangDAO = new KhachHangDAO();
-        Label lblTT = new Label("Thông tin");
+        InitComponent();
+        txtMaKh.enable(false);
+        loadKhachHangData();
+
+    }
+    
+    private void InitComponent() {
+		// TODO Auto-generated method stub
+    	Label lblTT = new Label("Thông tin");
         lblTT.setBackground(new Color(65, 41, 224));
         lblTT.setBounds(10, 10, 150, 40);
         add(lblTT);
@@ -158,6 +169,10 @@ public class PanelKhachHang extends JPanel {
                 String tenKH = txtTenKh.getText();
                 String ngaySinh = txtNgaySinh.getText();
                 String sdt = txtSDT.getText();
+                if(!sdt.isEmpty() && sdt.length() != 10) {
+            		JOptionPane.showMessageDialog(null, "Số điện thoại phải có 10 số");
+            		return;
+            	}
                 KhachHang kh = new KhachHang(maKH, tenKH, LocalDate.parse(ngaySinh), sdt);
                 if (khachHangDAO.themKhachHang(kh)) {
                     loadKhachHangData();
@@ -210,11 +225,9 @@ public class PanelKhachHang extends JPanel {
                 }
             }
         });
-        loadKhachHangData();
+	}
 
-    }
-    
-    private void fillInputFields(int selectedRow) {
+	private void fillInputFields(int selectedRow) {
         txtMaKh.setText(tableModel.getValueAt(selectedRow, 0).toString());
         txtTenKh.setText(tableModel.getValueAt(selectedRow, 1).toString());
         txtSDT.setText(tableModel.getValueAt(selectedRow, 2).toString());

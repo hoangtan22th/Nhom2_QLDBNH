@@ -25,6 +25,7 @@ import java.awt.event.MouseEvent;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.awt.event.ActionEvent;
 
 public class PanelNhanVien extends JPanel {
@@ -43,12 +44,18 @@ public class PanelNhanVien extends JPanel {
     private JTable tblNhanVien;
     private DefaultTableModel tableModel;
     private NhanVienDAO nhanVienDAO;
-
+    String gmailRegex = "^[a-zA-Z0-9._%+-]+@gmail\\.com$";
+    
     public PanelNhanVien() {
         nhanVienDAO = new NhanVienDAO(); 
         setLayout(null);
-
-        Label lblTT = new Label("Thông tin");
+        InitComponent();
+        
+        txtMaNV.enable(false);
+    }
+    
+    private void InitComponent() {
+    	Label lblTT = new Label("Thông tin");
         lblTT.setBackground(new Color(65, 41, 224));
         lblTT.setBounds(10, 10, 150, 40);
         add(lblTT);
@@ -280,6 +287,14 @@ public class PanelNhanVien extends JPanel {
     }
 
     private void addEmployee() {
+    	if(!txtSDT.getText().isEmpty() && txtSDT.getText().length() != 10) {
+    		JOptionPane.showMessageDialog(null, "Số điện thoại có 10 số");
+    		return;
+    	}
+    	if(!txtGmail.getText().isEmpty() && !Pattern.matches(gmailRegex, txtGmail.getText())) {
+    		JOptionPane.showMessageDialog(null, "Email không hợp lệ, email phải có đuôi @gmail.com");
+    		return;
+    	}
         NhanVien nv = new NhanVien();
         nv.setMaNV(txtMaNV.getText());
         nv.setTenNV(txtTenNV.getText());

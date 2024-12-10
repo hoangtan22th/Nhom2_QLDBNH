@@ -12,10 +12,10 @@ import entity.NhanVien;
 
 public class NhanVienDAO {
 
-
-
     // Method to add a new employee
     public boolean themNhanVien(NhanVien nv) {
+    	nv.setMaNV(generateMaNV());
+    	
         String sql = "INSERT INTO NhanVien (maNV, tenNV, diaChi, sdt, ngaySinh, ngayVaoLam, gmail, chucVu, luongCB) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection con = connectDB.getConnection(); 
              PreparedStatement pst = con.prepareStatement(sql)) {
@@ -33,6 +33,33 @@ public class NhanVienDAO {
             e.printStackTrace();
             return false;
         }
+    }
+    
+    public String getMaxMaNV() {
+        String sql = "select Max(maNV) as maxMaNV from NhanVien";
+        try (Connection con = connectDB.getConnection();
+             PreparedStatement pst = con.prepareStatement(sql);
+             ResultSet rs = pst.executeQuery()) {
+            if (rs.next()) {
+                return rs.getString("maxMaNV");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    
+    public String generateMaNV() {
+        String maxMaNV = getMaxMaNV();
+        if (maxMaNV == null) {
+            return "NV00001";
+        }
+        
+        int num = Integer.parseInt(maxMaNV.substring(2));
+        num++;
+
+        return String.format("NV%05d", num);
     }
 
     // Method to get an employee by ID
@@ -105,7 +132,7 @@ public class NhanVienDAO {
         List<NhanVien> danhSachNV = new ArrayList<>();
         String sql = "SELECT * FROM NhanVien";
         try (Connection con = connectDB.getConnection(); 
-             PreparedStatement pst = con.prepareStatement(sql); 
+             PreparedStatement pst = con.prepareStatement(sql);
              ResultSet rs = pst.executeQuery()) {
             while (rs.next()) {
                 danhSachNV.add(new NhanVien(
@@ -126,7 +153,32 @@ public class NhanVienDAO {
         return danhSachNV;
     }
 
-
+    public static NhanVien getDataByEmail(String email) {
+        NhanVien nhanVien = null;
+        String sql = "SELECT * FROM NhanVien WHERE gmail = ?";
+        try (Connection con = connectDB.getConnection(); 
+             PreparedStatement pst = con.prepareStatement(sql)) {
+             pst.setString(1, email);
+             ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                nhanVien = new NhanVien(
+                    rs.getString("maNV"),
+                    rs.getString("tenNV"),
+                    rs.getString("diaChi"),
+                    rs.getString("sdt"),
+                    rs.getDate("ngaySinh").toLocalDate(),
+                    rs.getDate("ngayVaoLam").toLocalDate(),
+                    rs.getString("gmail"),
+                    rs.getBoolean("chucVu"),
+                    rs.getFloat("luongCB"),
+                    rs.getString("taiKhoanId")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return nhanVien;
+    }
 
 
 }
