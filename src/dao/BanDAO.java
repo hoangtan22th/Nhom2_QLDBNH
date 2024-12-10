@@ -38,7 +38,7 @@ public class BanDAO {
 	}
 	public List<Ban> getBansByKhu(String tenKhu) {
 	    List<Ban> bans = new ArrayList<>();
-	    String sql = "SELECT maBan, tenBan, thoiGianDatBan, soChoNgoi, trangThai, loaiBan " +
+	    String sql = "SELECT maBan, tenBan, soChoNgoi, trangThai, loaiBan " +
 	                 "FROM Ban WHERE maKhu IN (SELECT maKhu FROM KhuVucBan WHERE tenKhu = ?)";
 
 	    try (Connection con = connectDB.getConnection(); 
@@ -50,7 +50,7 @@ public class BanDAO {
 	        while (rs.next()) {
 	            String maBan = rs.getString("maBan");
 	            String tenBan = rs.getString("tenBan");
-	            Timestamp timestamp = rs.getTimestamp("thoiGianDatBan");
+	         
 	            
 
 	            int soChoNgoi = rs.getInt("soChoNgoi");

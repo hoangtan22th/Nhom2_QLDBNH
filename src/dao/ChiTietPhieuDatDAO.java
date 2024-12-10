@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,9 +98,49 @@ public class ChiTietPhieuDatDAO {
 	}
 
 
+	  public List<ChiTietPhieuDat> layTatCaChiTietPhieuDat_Join() {
+		  List<ChiTietPhieuDat> chiTietPhieuDatList = new ArrayList<>();
+		    
+		    // Câu truy vấn SQL để lấy thông tin từ bảng ChiTietPhieuDat và kết hợp với các bảng khác
+		    String sql = "SELECT TOP (1000) " +
+		                 "ctd.maPhieuDat, ctd.maBan, pd.soDienThoai, pd.tenKhachDat, pd.ngayDat, pd.trangThai, pd.tienCoc, " +
+		                 "b.tenBan " +
+		                 "FROM QuanLyDatBanNhaHang.dbo.ChiTietPhieuDat ctd " +
+		                 "JOIN QuanLyDatBanNhaHang.dbo.PhieuDatBan pd ON ctd.maPhieuDat = pd.maPhieuDat " +
+		                 "JOIN QuanLyDatBanNhaHang.dbo.Ban b ON ctd.maBan = b.maBan";
 
+		    try (Connection connection = connectDB.getConnection();
+		         Statement statement = connection.createStatement();
+		         ResultSet resultSet = statement.executeQuery(sql)) {
+
+		        while (resultSet.next()) {
+		
+		            String maPhieuDat = resultSet.getString("maPhieuDat");
+		            String maBan = resultSet.getString("maBan");
+		            String soDienThoai = resultSet.getString("soDienThoai");
+		            String tenKhachDat = resultSet.getString("tenKhachDat");
+		            Timestamp ngayDat = resultSet.getTimestamp("ngayDat");
+		            Boolean trangThai = resultSet.getBoolean("trangThai");
+		            float tienCoc = resultSet.getFloat("tienCoc");
+		            String tenBan = resultSet.getString("tenBan");
+
+		            PhieuDatBan phieuDatBan = new PhieuDatBan(maPhieuDat, tenKhachDat, 0, ngayDat, "", tienCoc, soDienThoai, trangThai, null);  
+		            Ban ban = new Ban(maBan, tenBan, null, 0, false, false, null); 
+
+		          
+		            ChiTietPhieuDat chiTietPhieuDat = new ChiTietPhieuDat(0, null, phieuDatBan, ban);
+
+		            chiTietPhieuDatList.add(chiTietPhieuDat);
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
+
+		    return chiTietPhieuDatList;
+	    }
 	
 	}
+
 
 
 

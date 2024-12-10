@@ -1,5 +1,6 @@
 package entity;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -7,19 +8,22 @@ public class PhieuDatBan {
 	private String maPhieuDat;
 	private String tenKhachDat;
 	private int soLuongKhach;
-	private LocalDateTime ngayDat;
+	private Timestamp ngayDat;
 	private String ghiChu;
+	private float tienCoc;
+	private String soDienThoai;
 	private boolean trangThai;
 	private NhanVien nhanVien;
-	
-	public PhieuDatBan(String maPhieuDat, String tenKhachDat, int soLuongKhach, LocalDateTime ngayDat, String ghiChu,
-			boolean trangThai, NhanVien nhanVien) {
+	public PhieuDatBan(String maPhieuDat, String tenKhachDat, int soLuongKhach, Timestamp ngayDat, String ghiChu,
+			float tienCoc, String soDienThoai, boolean trangThai, NhanVien nhanVien) {
 		super();
 		this.maPhieuDat = maPhieuDat;
 		this.tenKhachDat = tenKhachDat;
 		this.soLuongKhach = soLuongKhach;
 		this.ngayDat = ngayDat;
 		this.ghiChu = ghiChu;
+		this.tienCoc = tienCoc;
+		this.soDienThoai = soDienThoai;
 		this.trangThai = trangThai;
 		this.nhanVien = nhanVien;
 	}
@@ -41,10 +45,10 @@ public class PhieuDatBan {
 	public void setSoLuongKhach(int soLuongKhach) {
 		this.soLuongKhach = soLuongKhach;
 	}
-	public LocalDateTime getNgayDat() {
+	public Timestamp getNgayDat() {
 		return ngayDat;
 	}
-	public void setNgayDat(LocalDateTime ngayDat) {
+	public void setNgayDat(Timestamp ngayDat) {
 		this.ngayDat = ngayDat;
 	}
 	public String getGhiChu() {
@@ -52,6 +56,18 @@ public class PhieuDatBan {
 	}
 	public void setGhiChu(String ghiChu) {
 		this.ghiChu = ghiChu;
+	}
+	public float getTienCoc() {
+		return tienCoc;
+	}
+	public void setTienCoc(float tienCoc) {
+		this.tienCoc = tienCoc;
+	}
+	public String getSoDienThoai() {
+		return soDienThoai;
+	}
+	public void setSoDienThoai(String soDienThoai) {
+		this.soDienThoai = soDienThoai;
 	}
 	public boolean isTrangThai() {
 		return trangThai;
@@ -68,9 +84,10 @@ public class PhieuDatBan {
 	@Override
 	public String toString() {
 		return "PhieuDatBan [maPhieuDat=" + maPhieuDat + ", tenKhachDat=" + tenKhachDat + ", soLuongKhach="
-				+ soLuongKhach + ", ngayDat=" + ngayDat + ", ghiChu=" + ghiChu + ", trangThai=" + trangThai
-				+ ", nhanVien=" + nhanVien + "]";
+				+ soLuongKhach + ", ngayDat=" + ngayDat + ", ghiChu=" + ghiChu + ", tienCoc=" + tienCoc
+				+ ", soDienThoai=" + soDienThoai + ", trangThai=" + trangThai + ", nhanVien=" + nhanVien + "]";
 	}
+	
 	
 	
 }

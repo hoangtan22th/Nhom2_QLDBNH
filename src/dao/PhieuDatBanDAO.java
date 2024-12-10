@@ -6,9 +6,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Time;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import connectDB.connectDB;
+import entity.Ban;
+import entity.ChiTietPhieuDat;
+import entity.MonAnUong;
 import entity.NhanVien;
 import entity.PhieuDatBan;
 
@@ -42,7 +48,7 @@ public class PhieuDatBanDAO {
 	}
 	public boolean themPhieuDat(PhieuDatBan phieuDat) {
 	    Connection connection = null;
-	    String sql = "INSERT INTO PhieuDatBan (maPhieuDat, tenKhachDat, soLuongKhach, ngayDat, ghiChu,trangThai, maNV) VALUES (?, ?, ?, ?, ?, ?,?)";
+	    String sql = "INSERT INTO PhieuDatBan (maPhieuDat, tenKhachDat, soLuongKhach, ngayDat, ghiChu,tienCoc,trangThai, maNV,soDienThoai) VALUES (?, ?,?, ?,?, ?, ?, ?,?)";
 	    
 	    try {
 	        connection = connectDB.getConnection();
@@ -51,11 +57,12 @@ public class PhieuDatBanDAO {
 	        ps.setString(1, phieuDat.getMaPhieuDat());
 	        ps.setString(2, phieuDat.getTenKhachDat());
 	        ps.setInt(3, phieuDat.getSoLuongKhach());
-	        ps.setTimestamp(4, java.sql.Timestamp.valueOf(phieuDat.getNgayDat()));
+	        ps.setTimestamp(4, phieuDat.getNgayDat());
 	        ps.setString(5, phieuDat.getGhiChu());
-	        ps.setBoolean(6, true);
-	        ps.setString(7, phieuDat.getNhanVien().getMaNV() );
-
+	        ps.setFloat(6, phieuDat.getTienCoc());
+	        ps.setBoolean(7, false);
+	        ps.setString(8, phieuDat.getNhanVien().getMaNV() );
+	        ps.setString(9, phieuDat.getSoDienThoai());
 	        int result = ps.executeUpdate();
 	        return result > 0; // Trả về true nếu thêm thành công
 	    } catch (SQLException e) {
@@ -79,21 +86,60 @@ public class PhieuDatBanDAO {
 	                // Lấy thông tin từ ResultSet
 	                String tenKhachDat = rs.getString("tenKhachDat");
 	                int soLuongKhach = rs.getInt("soLuongKhach");
-	                LocalDateTime ngayDat = rs.getTimestamp("ngayDat").toLocalDateTime();
+	                java.sql.Timestamp ngayDat = rs.getTimestamp("ngayDat");
 	                String ghiChu = rs.getString("ghiChu");
+	                Float tienCoc = rs.getFloat("tienCoc");
 	                Boolean trangThai = rs.getBoolean("trangThai");
-	                NhanVien nhanVien = null; // Bạn cần lấy thông tin nhân viên nếu có
-
-	                // Tạo đối tượng PhieuDatBan
-	                phieuDatBan = new PhieuDatBan(maPhieuDat, tenKhachDat, soLuongKhach, ngayDat, ghiChu,trangThai, nhanVien);
+	                String soDienThoai = rs.getString("soDienThoai");
+	                NhanVien nhanVien = null; 
+	                phieuDatBan = new PhieuDatBan(maPhieuDat, tenKhachDat, soLuongKhach, ngayDat, ghiChu,tienCoc,soDienThoai,trangThai, nhanVien);
 	            }
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
 
-	    return phieuDatBan; // Trả về đối tượng PhieuDatBan hoặc null nếu không tìm thấy
+	    return phieuDatBan;
 	}
+	public List<Object[]> layTatCaPhieuDatBan() {
+        List<Object[]> result = new ArrayList<>();
+        String sql = "SELECT DISTINCT pd.maPhieuDat, pd.tenKhachDat, pd.ngayDat, pd.ghiChu, pd.tienCoc, pd.trangThai, pd.soDienThoai, " +
+                "b.maBan, b.tenBan " +
+                "FROM QuanLyDatBanNhaHang.dbo.PhieuDatBan pd " +
+                "LEFT JOIN QuanLyDatBanNhaHang.dbo.ChiTietPhieuDat ct ON pd.maPhieuDat = ct.maPhieuDat " +
+                "LEFT JOIN QuanLyDatBanNhaHang.dbo.Ban b ON ct.maBan = b.maBan " +
+                "ORDER BY pd.ngayDat DESC";  
+
+        try ( Connection con = connectDB.getConnection();
+    	        Statement stmt = con.createStatement();
+    	        ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                String maPhieuDat = rs.getString("maPhieuDat");
+                String tenKhachDat = rs.getString("tenKhachDat");
+                java.sql.Timestamp ngayDat = rs.getTimestamp("ngayDat");
+                String ghiChu = rs.getString("ghiChu");
+                float tienCoc = rs.getFloat("tienCoc");
+                boolean trangThai = rs.getBoolean("trangThai");
+                String soDienThoai = rs.getString("soDienThoai");
+                String maBan = rs.getString("maBan");
+                String tenBan = rs.getString("tenBan");
+
+                // Tạo đối tượng PhieuDatBan và Ban
+                PhieuDatBan phieuDatBan = new PhieuDatBan(maPhieuDat, tenKhachDat, 0, ngayDat, ghiChu, tienCoc, soDienThoai, trangThai, null);
+      
+                Ban ban = new Ban(maBan, tenBan, null, 0, trangThai, trangThai, null);
+
+                // Thêm vào kết quả
+                result.add(new Object[]{phieuDatBan, ban});
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
 
 
 

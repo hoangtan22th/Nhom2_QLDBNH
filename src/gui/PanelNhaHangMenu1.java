@@ -47,7 +47,6 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 	private JPanel pnDanhSachBan;
 	private JButton btnTatCa;
 	private JButton btnBan;
-	private JButton btnThemMon;
 	public static String luuTenBan;
 	private JButton btnHuyDatBan;
 	private JButton btnThemTiepMon;
@@ -181,7 +180,7 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 
 		panel_6 = new JPanel();
 		panel_6.setBackground(new Color(240, 240, 240));
-		panel_6.setBounds(940, 773, 768, 229);
+		panel_6.setBounds(940, 773, 768, 157);
 		add(panel_6);
 		panel_6.setLayout(null);
 		btnChuyenBan = new JButton("Chuyển bàn");
@@ -209,12 +208,6 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 		btnPhieuKiemMon.setBounds(529, 7, 163, 53);
 		panel_6.add(btnPhieuKiemMon);
 
-		btnThemMon = new JButton("Đặt bàn thêm món");
-		btnThemMon.setForeground(Color.WHITE);
-		btnThemMon.setBackground(new Color(14, 48, 226));
-		btnThemMon.setBounds(356, 7, 163, 53);
-		panel_6.add(btnThemMon);
-
 		btnHuyDatBan = new JButton("Huỷ đặt bàn");
 		btnHuyDatBan.setForeground(Color.WHITE);
 		btnHuyDatBan.setBackground(new Color(250, 128, 114));
@@ -236,13 +229,12 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 		btnThanhToan = new JButton("Thanh toán");
 		btnThanhToan.setForeground(Color.WHITE);
 		btnThanhToan.setBackground(new Color(14, 48, 226));
-		btnThanhToan.setBounds(10, 133, 163, 53);
+		btnThanhToan.setBounds(356, 7, 163, 53);
 		panel_6.add(btnThanhToan);
 
 		btnChuyenBan.addActionListener(this);
 		btnGhepBan.addActionListener(this);
 		cbThuong.addActionListener(this);
-		btnThemMon.addActionListener(this);
 
 		String firstKhuTen = cbThuong.getItemAt(0).toString();
 		BanDAO banDAO = new BanDAO();
@@ -273,7 +265,7 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 			btnBan.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-//					JOptionPane.showMessageDialog(null, "Bạn đã chọn bàn: " + ban.getTenBan());
+					JOptionPane.showMessageDialog(null, "Bạn đã chọn bàn: " + ban.getTenBan());
 					ThemMon.luuMaBan = ban.getMaBan();
 					PhieuDat.maBan = ban.getMaBan();
 					if (ban.isTrangThai()) {
@@ -333,6 +325,30 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 	        public void actionPerformed(ActionEvent e) {
 	            // xử lý sự kiện khi bàn được chọn
 	            JOptionPane.showMessageDialog(null, "Bạn đã chọn bàn: " + ban.getTenBan());
+	            ThemMon.luuMaBan = ban.getMaBan();
+				PhieuDat.maBan = ban.getMaBan();
+				if (ban.isTrangThai()) {
+					ChiTietPhieuDatDAO ctpdd = new ChiTietPhieuDatDAO();
+					List<ChiTietPhieuDat> chiTietList = ctpdd.layChiTietPhieuDat(ThemMon.luuMaBan);
+
+					DefaultTableModel model = (DefaultTableModel) table.getModel();
+					model.setRowCount(0);
+
+					for (ChiTietPhieuDat chiTiet : chiTietList) {
+						int soLuong = chiTiet.getSoLuong();
+						MonAnUong monAnUong = chiTiet.getMonAnUong();
+
+						model.addRow(new Object[] { soLuong, monAnUong.getTenMonAnUong(),
+								monAnUong.getGiaTien() * soLuong });
+					}
+
+					table.revalidate();
+					table.repaint();
+				} else {
+
+					DefaultTableModel model = (DefaultTableModel) table.getModel();
+					model.setRowCount(0);
+				}
 	        }
 	    });
 
@@ -392,34 +408,7 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 
 			pnDanhSachBan.revalidate();
 			pnDanhSachBan.repaint();
-		} else if (e.getSource() == btnThemMon) {
-			BanDAO banDAO = new BanDAO();
-
-			if (banDAO.isBanDaDat(ThemMon.luuMaBan)) {
-
-				String maPhieuDatCu = "";
-				new ThemMon().setVisible(true);
-
-			} else {
-
-				new ThemMon().setVisible(true);
-				ThemMon.loadThongTinMonAn(ThemMon.luuMaBan);
-			}
-		} else if (e.getSource() == btnHuyDatBan) {
-			String maBan = ThemMon.luuMaBan;
-			BanDAO bd = new BanDAO();
-			if (bd.isBanDaDat(maBan)) {
-
-				bd.huyDatBan(maBan);
-				JOptionPane.showMessageDialog(null, "Đã hủy đặt bàn " + maBan);
-				
-
-			} else {
-
-				JOptionPane.showMessageDialog(null, "Bàn " + maBan + " chưa được đặt.");
-			}
-
-		}
+		} 
 
 	}
 }
