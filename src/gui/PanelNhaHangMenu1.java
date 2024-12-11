@@ -444,14 +444,14 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 		    BanDAO banDAO = new BanDAO();
 		   
 		    if ( banDAO.isBanDaDat(ThemMon.luuMaBan) == false) {
-		        JOptionPane.showMessageDialog(null, "Bàn chưa được xác nhận thanh toán. Không thể tạo hóa đơn.");
-		        return; // Dừng lại nếu trạng thái bàn không hợp lệ
+		        JOptionPane.showMessageDialog(null, "Bàn chưa được kích hoạt. Không thể tạo hóa đơn.");
+		        return; 
 		    }
 		    
 		    HoaDonDAO hoaDonDAO = new HoaDonDAO();
 		    if (hoaDonDAO.kiemTraHoaDonTontai(maBan)) {
 		     
-		        JOptionPane.showMessageDialog(null, "Đã có hóa đơn chưa thanh toán (trạng thái = 0) với bàn này.");
+		        JOptionPane.showMessageDialog(null, "Đã có hoá đơn chưa thanh toán với bàn này");
 		        new ThanhToanBan().setVisible(true); 
 		        return; 
 		    }
@@ -464,7 +464,7 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 		  
 		    for (int row = 0; row < table.getRowCount(); row++) {
 		        Object rowThanhTienObj = table.getValueAt(row, 3); 
-		        System.out.println("Dòng " + row + " tổng tiền: " + rowThanhTienObj);  // Ghi log giá trị tổng tiền của mỗi món ăn
+		        System.out.println("Dòng " + row + " tổng tiền: " + rowThanhTienObj); 
 
 		        if (rowThanhTienObj instanceof Double) {
 		            double rowThanhTien = (Double) rowThanhTienObj;
@@ -479,16 +479,15 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 		        }
 		    }
 
-		    // Tính tổng tiền (thêm 10%)
-		    tongTien = thanhTien * 1.1; // Thêm 10%
-
-		    boolean trangThai = false; // Chưa thanh toán (trạng thái = 0)
+	
+		    tongTien = thanhTien * 1.1; 
+		    boolean trangThai = false; 
 		    
 		    HoaDon hoaDon = new HoaDon();
 		    hoaDon.setMaHoaDon(hoaDonDAO.generateMaHoaDon()); 
-		    hoaDon.setNhanVien(new NhanVien(maNV));  // Tạo đối tượng nhân viên
-		    hoaDon.setKhachHang(new KhachHang(maKH));  // Tạo đối tượng khách hàng
-		    hoaDon.setBan(new Ban(maBan));  // Tạo đối tượng bàn
+		    hoaDon.setNhanVien(new NhanVien(maNV)); 
+		    hoaDon.setKhachHang(new KhachHang(maKH));  
+		    hoaDon.setBan(new Ban(maBan));  
 		    hoaDon.setThue(new Thue("T00001"));
 		    hoaDon.setThanhTien(thanhTien);
 		    hoaDon.setTongTien(tongTien);
