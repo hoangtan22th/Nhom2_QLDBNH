@@ -21,6 +21,9 @@ public class Ban {
 		this.loaiBan = loaiBan;
 		this.khuVucBan = khuVucBan;
 	}
+	public Ban() {
+		super();
+	}
 	public Ban(String maBan) {
 		super();
 		this.maBan = maBan;

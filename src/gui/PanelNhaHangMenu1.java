@@ -20,6 +20,8 @@ import javax.swing.BorderFactory;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,8 +37,10 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
-public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
+public class PanelNhaHangMenu1 extends JPanel implements ActionListener, MouseListener {
 
 	private static final long serialVersionUID = 1L;
 	private JTable table;
@@ -47,7 +51,7 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 	private JPanel pnDanhSachBan;
 	private JButton btnTatCa;
 	private JButton btnBan;
-	private JButton btnThemMon;
+	private JButton btnThemMon, btnTachBan;
 	public static String luuTenBan;
 	public String LUUMABAN;
 	private JButton btnHuyDatBan;
@@ -122,6 +126,33 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 		table.getColumnModel().getColumn(2).setPreferredWidth(150);
 
 		scrollPane.setViewportView(table);
+		
+		
+		
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+		    @Override
+		    public void valueChanged(ListSelectionEvent e) {
+		        if (!e.getValueIsAdjusting() && table.getSelectedRow() != -1) {
+		            int selectedRow = table.getSelectedRow();
+
+		            // Lấy thông tin từ JTable
+		            String soLuongStr = table.getValueAt(selectedRow, 0).toString();
+		            String tenMon = table.getValueAt(selectedRow, 1).toString();
+
+		            int soLuong = Integer.parseInt(soLuongStr);
+
+		            // Gọi phương thức từ BanDAO
+		            BanDAO banDAO = new BanDAO();
+		            String thongTinMon = banDAO.getThongTinMon(tenMon, soLuong);
+
+		            // Hiển thị PanelTachBan
+		            PanelTachBan panelTachBan = new PanelTachBan();
+		            panelTachBan.setThongTinMon(thongTinMon);
+		            panelTachBan.setVisible(true);
+		        }
+		    }
+		});
+
 
 		JPanel panel_3 = new JPanel();
 		panel_3.setBounds(81, 773, 742, 70);
@@ -195,12 +226,11 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 		btnGhepBan.setBounds(309, 6, 143, 53);
 		panel_6.add(btnGhepBan);
 
-		JButton btnNewButton_16 = new JButton("Tách bàn");
-		btnNewButton_16.setForeground(Color.WHITE);
-
-		btnNewButton_16.setBackground(new Color(226, 141, 14));
-		btnNewButton_16.setBounds(462, 6, 143, 53);
-		panel_6.add(btnNewButton_16);
+		btnTachBan = new JButton("Tách bàn");
+		btnTachBan.setForeground(Color.WHITE);
+		btnTachBan.setBackground(new Color(226, 141, 14));
+		btnTachBan.setBounds(462, 6, 143, 53);
+		panel_6.add(btnTachBan);
 
 		JButton btnPhieuKiemMon = new JButton("Phiếu kiểm món");
 		btnPhieuKiemMon.setForeground(Color.WHITE);
@@ -225,7 +255,7 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 		btnThemTiepMon.setBackground(new Color(14, 48, 226));
 		btnThemTiepMon.setBounds(0, 70, 146, 53);
 		panel_6.add(btnThemTiepMon);
-		
+
 		JButton btnPhiut = new JButton("Phiếu đặt");
 		btnPhiut.setForeground(Color.WHITE);
 		btnPhiut.setBackground(new Color(14, 48, 226));
@@ -234,6 +264,7 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 
 		btnChuyenBan.addActionListener(this);
 		btnGhepBan.addActionListener(this);
+		btnTachBan.addActionListener(this);
 		cbThuong.addActionListener(this);
 		btnThemMon.addActionListener(this);
 
@@ -310,8 +341,9 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 		if (e.getSource() == btnChuyenBan) {
 			new ChuyenBan().setVisible(true);
 		} else if (e.getSource() == btnGhepBan) {
-
 			new GhepBan().setVisible(true);
+		} else if (e.getSource() == btnTachBan) {
+			new PanelTachBan().setVisible(true);
 		} else if (e.getSource() == cbThuong) {
 			String selectedKhuTen = cbThuong.getSelectedItem().toString();
 
@@ -420,6 +452,36 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 			}
 
 		}
+
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
 
 	}
 }
