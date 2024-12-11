@@ -34,6 +34,21 @@ public class KhachHangDAO {
         }
     }
     
+    public boolean isExistAnotherTable(String maKH) {
+    	String sql = "SELECT * FROM HoaDon WHERE maKH = ?";
+    	try (Connection con = connectDB.getConnection()) { 
+            try(PreparedStatement pst = con.prepareStatement(sql)) {
+            	pst.setString(1, maKH);
+                ResultSet rs = pst.executeQuery();
+                if(rs.next())
+                	return true;
+            }
+       } catch (SQLException e) {
+           e.printStackTrace();
+       }
+    	return false;
+    }
+    
 //    public String getMaxMaKH() {
 //        String sql = "SELECT MAX(maKH) AS maxMaKH FROM KhachHang";
 //        try (Connection con = connectDB.getConnection(); 

@@ -66,27 +66,27 @@ public class DangNhap extends JFrame implements ActionListener{
 
         txtDangNhap = new JTextField(25);
         txtMatKhau = new JTextField(25);
-        txtDangNhap.setPreferredSize(new Dimension(400, 20)); 
-        txtMatKhau.setPreferredSize(new Dimension(400, 20)); 
+        txtDangNhap.setPreferredSize(new Dimension(400, 20));
+        txtMatKhau.setPreferredSize(new Dimension(400, 20));
         lblDangNhap = new JLabel("Tên đăng nhập: ");
         lblMatKhau = new JLabel("Mật khẩu: ");
-        lblMatKhau.setPreferredSize(lblDangNhap.getPreferredSize()); 
+        lblMatKhau.setPreferredSize(lblDangNhap.getPreferredSize());
         
         btnDangNhap = new JButton("Đăng nhập");
         btnDangNhap.setPreferredSize(buttonSize);
-        btnDangNhap.setBackground(Color.decode("#00972A")); 
-        btnDangNhap.setForeground(Color.WHITE); 
-        btnDangNhap.setMinimumSize(buttonSize); 
-        btnDangNhap.setMaximumSize(buttonSize); 
+        btnDangNhap.setBackground(Color.decode("#00972A"));
+        btnDangNhap.setForeground(Color.WHITE);
+        btnDangNhap.setMinimumSize(buttonSize);
+        btnDangNhap.setMaximumSize(buttonSize);
         
         btnQuenMatKhau = new JButton("Quên mật khẩu");
-//        btnQuenMatKhau.addActionListener(new ActionListener() {
-//        	public void actionPerformed(ActionEvent e) {
-//        		fXacThucEmail form = new fXacThucEmail();
-//        		form.setVisible(true); // Hiển thị giao diện
-//        		dispose();
-//        	}
-//        });
+        btnQuenMatKhau.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		fXacThucEmail form = new fXacThucEmail();
+        		form.setVisible(true); // Hiển thị giao diện
+        		dispose();
+        	}
+        });
         btnQuenMatKhau.setPreferredSize(buttonSize);
         btnQuenMatKhau.setBackground(Color.decode("#E28D0E")); 
         btnQuenMatKhau.setForeground(Color.WHITE); 

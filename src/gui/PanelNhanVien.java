@@ -161,7 +161,7 @@ public class PanelNhanVien extends JPanel {
         JButton btnThem = new JButton("Thêm");
         btnThem.setForeground(Color.WHITE);
         btnThem.setBackground(new Color(0, 191, 0));
-        btnThem.setBounds(10, 677, 70, 30);
+        btnThem.setBounds(10, 38, 70, 30);
         panel.add(btnThem);
 
         btnThem.addActionListener(new ActionListener() {
@@ -173,7 +173,7 @@ public class PanelNhanVien extends JPanel {
         JButton btnSua = new JButton("Sửa");
         btnSua.setForeground(Color.WHITE);
         btnSua.setBackground(new Color(255, 128, 64));
-        btnSua.setBounds(106, 677, 70, 30);
+        btnSua.setBounds(106, 38, 70, 30);
         panel.add(btnSua);
         btnSua.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -184,7 +184,7 @@ public class PanelNhanVien extends JPanel {
         JButton btnXoa = new JButton("Xóa");
         btnXoa.setForeground(Color.WHITE);
         btnXoa.setBackground(Color.RED);
-        btnXoa.setBounds(197, 677, 70, 30);
+        btnXoa.setBounds(208, 38, 70, 30);
         panel.add(btnXoa);
         btnXoa.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -311,6 +311,14 @@ public class PanelNhanVien extends JPanel {
     }
 
     private void updateEmployee() {
+    	if(!txtSDT.getText().isEmpty() && txtSDT.getText().length() != 10) {
+    		JOptionPane.showMessageDialog(null, "Số điện thoại có 10 số");
+    		return;
+    	}
+    	if(!txtGmail.getText().isEmpty() && !Pattern.matches(gmailRegex, txtGmail.getText())) {
+    		JOptionPane.showMessageDialog(null, "Email không hợp lệ, email phải có đuôi @gmail.com");
+    		return;
+    	}
         NhanVien nv = new NhanVien();
         nv.setMaNV(txtMaNV.getText());
         nv.setTenNV(txtTenNV.getText());
@@ -328,6 +336,11 @@ public class PanelNhanVien extends JPanel {
 
     private void deleteEmployee() {
         String maNV = txtMaNV.getText();
+        if(nhanVienDAO.isExistAnotherTable(maNV))
+        {
+        	JOptionPane.showMessageDialog(this, "Không thể xóa! Dữ liệu nhân viên đã tồn tại bên bảng khác");
+        	return;
+        }
         nhanVienDAO.xoaNhanVien(maNV);
         loadAllEmployees();
         clearFields();

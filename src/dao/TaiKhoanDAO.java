@@ -50,7 +50,7 @@ public class TaiKhoanDAO {
 	}
 
     public static boolean changePassword(String email, String password) {
-        String sql = "UPDATE TaiKhoan SET matKhau = ? from NhanVien WHERE TaiKhoan.taiKhoan = NhanVien.taiKhoanId and NhanVien.gmail = ?";
+        String sql = "UPDATE TaiKhoan SET matKhau = ? from NhanVien WHERE TaiKhoan.taiKhoan = NhanVien.maNV and NhanVien.gmail = ?";
         try (Connection con = connectDB.getConnection();
             PreparedStatement statement = con.prepareStatement(sql)) {
             statement.setString(1, password);

@@ -126,6 +126,37 @@ public class NhanVienDAO {
             return false;
         }
     }
+    
+    public boolean isExistAnotherTable(String maNV) {
+    	String sql = "SELECT * FROM TaiKhoan WHERE taiKhoan = ?";
+    	String sql1 = "SELECT * FROM PhieuDatBan WHERE maNV = ?";
+    	String sql2 = "SELECT * FROM HoaDon WHERE maNV = ?";
+    	try (Connection con = connectDB.getConnection()) { 
+            try(PreparedStatement pst = con.prepareStatement(sql)) {
+            	pst.setString(1, maNV);
+                ResultSet rs = pst.executeQuery();
+                if(rs.next())
+                	return true;
+            }
+            
+            try(PreparedStatement pst = con.prepareStatement(sql1)) {
+            	pst.setString(1, maNV);
+                ResultSet rs = pst.executeQuery();
+                if(rs.next())
+                	return true;
+            }
+            
+            try(PreparedStatement pst = con.prepareStatement(sql2)) {
+            	pst.setString(1, maNV);
+                ResultSet rs = pst.executeQuery();
+                if(rs.next())
+                	return true;
+            }
+       } catch (SQLException e) {
+           e.printStackTrace();
+       }
+    	return false;
+    }
 
     // Method to get all employees
     public List<NhanVien> layTatCaNhanVien() {
@@ -170,8 +201,7 @@ public class NhanVienDAO {
                     rs.getDate("ngayVaoLam").toLocalDate(),
                     rs.getString("gmail"),
                     rs.getBoolean("chucVu"),
-                    rs.getFloat("luongCB"),
-                    rs.getString("taiKhoanId")
+                    rs.getFloat("luongCB")
                 );
             }
         } catch (SQLException e) {

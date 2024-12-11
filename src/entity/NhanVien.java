@@ -13,22 +13,6 @@ public class NhanVien {
     private String gmail;
     private boolean chucVu;
     private double luongCB;
-    private String taiKhoanId;
-
-    public NhanVien(String maNV, String tenNV, String diaChi, String sdt, LocalDate ngaySinh, LocalDate ngayVaoLam,
-            String gmail, boolean chucVu, double luongCB, String taiKhoanId) {
-        super();
-        this.maNV = maNV;
-        this.tenNV = tenNV;
-        this.diaChi = diaChi;
-        this.sdt = sdt;
-        this.ngaySinh = ngaySinh;
-        this.ngayVaoLam = ngayVaoLam;
-        this.gmail = gmail;
-        this.chucVu = chucVu;
-        this.luongCB = luongCB;
-        this.taiKhoanId = taiKhoanId;
-    }
     
     public NhanVien(String maNV, String tenNV, String diaChi, String sdt, LocalDate ngaySinh, LocalDate ngayVaoLam,
             String gmail, boolean chucVu, double luongCB) {
@@ -126,13 +110,6 @@ public class NhanVien {
         this.luongCB = luongCB;
     }
 
-    public String getTaiKhoanId() {
-        return taiKhoanId;
-    }
-
-    public void setTaiKhoanId(String taiKhoanId) {
-        this.taiKhoanId = taiKhoanId;
-    }
 
     @Override
     public String toString() {

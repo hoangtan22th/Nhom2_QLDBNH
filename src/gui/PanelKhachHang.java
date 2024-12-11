@@ -44,7 +44,6 @@ public class PanelKhachHang extends JPanel {
         InitComponent();
         txtMaKh.enable(false);
         loadKhachHangData();
-
     }
     
     private void InitComponent() {
@@ -187,6 +186,10 @@ public class PanelKhachHang extends JPanel {
                 String tenKH = txtTenKh.getText();
                 String ngaySinh = txtNgaySinh.getText();
                 String sdt = txtSDT.getText();
+                if(!sdt.isEmpty() && sdt.length() != 10) {
+            		JOptionPane.showMessageDialog(null, "Số điện thoại phải có 10 số");
+            		return;
+            	}
                 KhachHang kh = new KhachHang(maKH, tenKH, LocalDate.parse(ngaySinh), sdt);
                 if (khachHangDAO.capNhatKhachHang(kh)) {
                     loadKhachHangData();
@@ -198,6 +201,11 @@ public class PanelKhachHang extends JPanel {
         btnXoa.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String maKH = txtMaKh.getText();
+                if(khachHangDAO.isExistAnotherTable(maKH))
+                {
+                	JOptionPane.showMessageDialog(null, "Không thể xóa! Dữ liệu khách hàng đã tồn tại bên bảng khác");
+                	return;
+                }
                 if (khachHangDAO.xoaKhachHang(maKH)) {
                     loadKhachHangData();
                     clearFields();
