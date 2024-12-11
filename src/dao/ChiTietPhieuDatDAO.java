@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,68 @@ import entity.MonAnUong;
 import entity.PhieuDatBan;
 
 public class ChiTietPhieuDatDAO {
+	public ChiTietPhieuDat layChiTietTheoPhieuVaMon(String maPhieuDat, String maMonAn) {
+		  Connection con = connectDB.getConnection();
+	    ChiTietPhieuDat chiTiet = null;
+	    String query = "SELECT * FROM ChiTietPhieuDat WHERE MaPhieuDat = ? AND MaMonAnUong = ?";
+	    
+	    try (PreparedStatement ps = con.prepareStatement(query)) {
+	        
+	    	ps.setString(1, maPhieuDat);
+	    	ps.setString(2, maMonAn);
+	        
+	        ResultSet rs = ps.executeQuery();
+	        if (rs.next()) {
+	            // Lấy thông tin chi tiết
+	            int soLuong = rs.getInt("SoLuong");
+	            String maBan = rs.getString("MaBan");
+	            Ban ban = new Ban(maBan);
+	            MonAnUong monAn = new MonAnUong(maMonAn);  // Lấy các thuộc tính nếu cần
+	            PhieuDatBan phieuDat = new PhieuDatBan(maPhieuDat);
+	            
+	            chiTiet = new ChiTietPhieuDat(soLuong, monAn, phieuDat, ban);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return chiTiet;
+	}
+	public boolean capNhatChiTiet(ChiTietPhieuDat chiTiet) {
+		  Connection con = connectDB.getConnection();
+	    String query = "UPDATE ChiTietPhieuDat SET SoLuong = ? WHERE MaPhieuDat = ? AND MaMonAnUong = ?";
+	    int rowsAffected = 0;
+	    
+	    try (PreparedStatement ps = con.prepareStatement(query))  {
+	        
+	    	ps.setInt(1, chiTiet.getSoLuong());
+	    	ps.setString(2, chiTiet.getPhieuDatBan().getMaPhieuDat());
+	    	ps.setString(3, chiTiet.getMonAnUong().getMaMonAnUong());
+	        
+	        rowsAffected = ps.executeUpdate();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return rowsAffected > 0;
+	}
+//	public boolean themChiTietPhieuDat1(ChiTietPhieuDat chiTiet) {
+//		  Connection con = connectDB.getConnection();
+//	    String query = "INSERT INTO ChiTietPhieuDat (MaPhieuDat, MaMonAnUong, MaBan, SoLuong) VALUES (?, ?, ?, ?)";
+//	    int rowsAffected = 0;
+//	    
+//	    try (PreparedStatement ps = con.prepareStatement(query))  {
+//	        
+//	    	ps.setString(1, chiTiet.getPhieuDatBan().getMaPhieuDat());
+//	    	ps.setString(2, chiTiet.getMonAnUong().getMaMonAnUong());
+//	    	ps.setString(3, chiTiet.getBan().getMaBan());
+//	    	ps.setInt(4, chiTiet.getSoLuong());
+//	        
+//	        rowsAffected = ps.executeUpdate();
+//	    } catch (SQLException e) {
+//	        e.printStackTrace();
+//	    }
+//	    return rowsAffected > 0;
+//	}
+
 	public boolean themChiTietPhieuDat(ChiTietPhieuDat chiTiet) {
 	    Connection con = connectDB.getConnection();
 	    String sql = "INSERT INTO ChiTietPhieuDat (maPhieuDat, maMonAnUong, soLuong, maBan) VALUES (?, ?, ?, ?)";
@@ -23,7 +86,12 @@ public class ChiTietPhieuDatDAO {
 	    try {
 	        PreparedStatement ps = con.prepareStatement(sql);
 	        ps.setString(1, chiTiet.getPhieuDatBan().getMaPhieuDat()); 
-	        ps.setString(2, chiTiet.getMonAnUong().getMaMonAnUong()); 
+	        if (chiTiet.getMonAnUong() != null) {
+	            ps.setString(2, chiTiet.getMonAnUong().getMaMonAnUong());
+	        } else {
+	            ps.setString(2, null); 
+	        }
+
 	        ps.setInt(3, chiTiet.getSoLuong()); 
 	        ps.setString(4, chiTiet.getBan().getMaBan()); 
 
@@ -64,7 +132,6 @@ public class ChiTietPhieuDatDAO {
 	}
 	public List<ChiTietPhieuDat> layChiTietPhieuDat(String maBan) {
 	    List<ChiTietPhieuDat> chiTietList = new ArrayList<>();
-	    // Truy vấn lấy chi tiết phiếu đặt từ bảng ChiTietPhieuDat khi trạng thái phiếu đặt = 1
 	    String query = "SELECT ctpd.soLuong, ctpd.maMonAnUong " +
 	                   "FROM ChiTietPhieuDat ctpd " +
 	                   "JOIN PhieuDatBan pdb ON ctpd.maPhieuDat = pdb.maPhieuDat " +
@@ -72,21 +139,14 @@ public class ChiTietPhieuDatDAO {
 
 	    try (Connection con = connectDB.getConnection(); 
 	         PreparedStatement stmt = con.prepareStatement(query)) {
-
-	        // Set giá trị mã bàn vào truy vấn
 	        stmt.setString(1, maBan);
 
 	        try (ResultSet rs = stmt.executeQuery()) {
-	            // Duyệt qua kết quả trả về và thêm chi tiết vào danh sách
 	            while (rs.next()) {
 	                int soLuong = rs.getInt("soLuong");
 	                String maMonAn = rs.getString("maMonAnUong");
-
-	                // Lấy chi tiết món ăn từ DAO
 	                MonAnUongDAO maud = new MonAnUongDAO();
 	                MonAnUong monAnUong = maud.layMonAnUong(maMonAn);
-
-	                // Thêm vào danh sách kết quả
 	                chiTietList.add(new ChiTietPhieuDat(soLuong, monAnUong, null, null));
 	            }
 	        }
@@ -97,6 +157,40 @@ public class ChiTietPhieuDatDAO {
 	    return chiTietList;
 	}
 
+
+//	public List<ChiTietPhieuDat> layChiTietPhieuDat(String maBan) {
+//	    List<ChiTietPhieuDat> chiTietList = new ArrayList<>();
+//	    String query = "SELECT ctpd.soLuong, ctpd.maMonAnUong, pdb.ngayDat, pdb.soLuongKhach " +
+//	                   "FROM ChiTietPhieuDat ctpd " +
+//	                   "JOIN PhieuDatBan pdb ON ctpd.maPhieuDat = pdb.maPhieuDat " +
+//	                
+//	                   "WHERE ctpd.maBan = ? AND pdb.trangThai = 1";
+//
+//	    try (Connection con = connectDB.getConnection(); 
+//	         PreparedStatement stmt = con.prepareStatement(query)) {
+//	        stmt.setString(1, maBan);
+//
+//	        try (ResultSet rs = stmt.executeQuery()) {
+//	            while (rs.next()) {
+//	                int soLuong = rs.getInt("soLuong");
+//	                String maMonAn = rs.getString("maMonAnUong");
+//	                LocalDateTime thoiGianDen = rs.getTimestamp("ngayDat").toLocalDateTime();
+//	     
+//	                int soLuongKhach = rs.getInt("soLuongKhach");
+//
+//	                MonAnUongDAO maud = new MonAnUongDAO();
+//	                MonAnUong monAnUong = maud.layMonAnUong(maMonAn);
+//	                ChiTietPhieuDat chiTiet = new ChiTietPhieuDat(soLuong, monAnUong, thoiGianDen, soLuongKhach);
+//	                
+//	                chiTietList.add(chiTiet);
+//	            }
+//	        }
+//	    } catch (SQLException e) {
+//	        e.printStackTrace();
+//	    }
+//
+//	    return chiTietList;
+//	}
 
 	  public List<ChiTietPhieuDat> layTatCaChiTietPhieuDat_Join() {
 		  List<ChiTietPhieuDat> chiTietPhieuDatList = new ArrayList<>();

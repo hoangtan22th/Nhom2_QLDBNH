@@ -1,23 +1,25 @@
 package entity;
 
 public class ChiTietHoaDon {
-	private String soLuongMonAn;
+	private int soLuongMonAn;
 	private HoaDon hoaDon;
 	private MonAnUong monAnUong;
 	private KhuyenMai khuyenMai;
-	private Ban ban;
-	public ChiTietHoaDon(String soLuongMonAn, HoaDon hoaDon, MonAnUong monAnUong, KhuyenMai khuyenMai, Ban ban) {
+	public ChiTietHoaDon(int soLuongMonAn, HoaDon hoaDon, MonAnUong monAnUong, KhuyenMai khuyenMai) {
 		super();
 		this.soLuongMonAn = soLuongMonAn;
 		this.hoaDon = hoaDon;
 		this.monAnUong = monAnUong;
 		this.khuyenMai = khuyenMai;
-		this.ban = ban;
+	
 	}
-	public String getSoLuongMonAn() {
+	public ChiTietHoaDon() {
+		// TODO Auto-generated constructor stub
+	}
+	public int getSoLuongMonAn() {
 		return soLuongMonAn;
 	}
-	public void setSoLuongMonAn(String soLuongMonAn) {
+	public void setSoLuongMonAn(int soLuongMonAn) {
 		this.soLuongMonAn = soLuongMonAn;
 	}
 	public HoaDon getHoaDon() {
@@ -38,16 +40,11 @@ public class ChiTietHoaDon {
 	public void setKhuyenMai(KhuyenMai khuyenMai) {
 		this.khuyenMai = khuyenMai;
 	}
-	public Ban getBan() {
-		return ban;
-	}
-	public void setBan(Ban ban) {
-		this.ban = ban;
-	}
+	
 	@Override
 	public String toString() {
 		return "ChiTietHoaDon [soLuongMonAn=" + soLuongMonAn + ", hoaDon=" + hoaDon + ", monAnUong=" + monAnUong
-				+ ", khuyenMai=" + khuyenMai + ", ban=" + ban + "]";
+				+ ", khuyenMai=" + khuyenMai + "]";
 	}
 	
 }

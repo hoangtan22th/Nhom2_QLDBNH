@@ -8,13 +8,25 @@ public class HoaDon {
 	private KhachHang khachHang;
 	private LocalDate ngayLapHoaDon;
 	private Thue thue;
-	public HoaDon(String maHoaDon, NhanVien nhanVien, KhachHang khachHang, LocalDate ngayLapHoaDon, Thue thue) {
+	private Ban ban;
+	private double thanhTien;
+	private double tongTien;
+	private boolean trangThai;
+	public HoaDon(String maHoaDon, NhanVien nhanVien, KhachHang khachHang, LocalDate ngayLapHoaDon, Thue thue, Ban ban,
+			double thanhTien, double tongTien, boolean trangThai) {
 		super();
 		this.maHoaDon = maHoaDon;
 		this.nhanVien = nhanVien;
 		this.khachHang = khachHang;
 		this.ngayLapHoaDon = ngayLapHoaDon;
 		this.thue = thue;
+		this.ban = ban;
+		this.thanhTien = thanhTien;
+		this.tongTien = tongTien;
+		this.trangThai = trangThai;
+	}
+	public HoaDon() {
+		
 	}
 	public String getMaHoaDon() {
 		return maHoaDon;
@@ -46,10 +58,35 @@ public class HoaDon {
 	public void setThue(Thue thue) {
 		this.thue = thue;
 	}
+	public Ban getBan() {
+		return ban;
+	}
+	public void setBan(Ban ban) {
+		this.ban = ban;
+	}
+	public double getThanhTien() {
+		return thanhTien;
+	}
+	public void setThanhTien(double thanhTien) {
+		this.thanhTien = thanhTien;
+	}
+	public double getTongTien() {
+		return tongTien;
+	}
+	public void setTongTien(double tongTien) {
+		this.tongTien = tongTien;
+	}
+	public boolean isTrangThai() {
+		return trangThai;
+	}
+	public void setTrangThai(boolean trangThai) {
+		this.trangThai = trangThai;
+	}
 	@Override
 	public String toString() {
 		return "HoaDon [maHoaDon=" + maHoaDon + ", nhanVien=" + nhanVien + ", khachHang=" + khachHang
-				+ ", ngayLapHoaDon=" + ngayLapHoaDon + ", thue=" + thue + "]";
+				+ ", ngayLapHoaDon=" + ngayLapHoaDon + ", thue=" + thue + ", ban=" + ban + ", thanhTien=" + thanhTien
+				+ ", tongTien=" + tongTien + ", trangThai=" + trangThai + "]";
 	}
 	
 	

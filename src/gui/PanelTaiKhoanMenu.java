@@ -242,6 +242,8 @@ public class PanelTaiKhoanMenu extends JPanel implements ActionListener{
 				Date date = Date.from(ngayDangKy.atZone(ZoneId.systemDefault()).toInstant());
 				datePicker.getModel().setDate(date.getYear() + 1900, date.getMonth(), date.getDate());
 				datePicker.getModel().setSelected(true);
+				
+				
 				cbxChucVu.setSelectedItem(table.getValueAt(row, 2).toString()); 
 			}
 		});

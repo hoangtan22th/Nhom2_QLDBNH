@@ -8,12 +8,19 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 import dao.BanDAO;
+import dao.ChiTietHoaDonDAO;
 import dao.ChiTietPhieuDatDAO;
+import dao.HoaDonDAO;
 import dao.KhuVucBanDAO;
 import entity.Ban;
+import entity.ChiTietHoaDon;
 import entity.ChiTietPhieuDat;
+import entity.HoaDon;
+import entity.KhachHang;
 import entity.KhuVucBan;
 import entity.MonAnUong;
+import entity.NhanVien;
+import entity.Thue;
 
 import javax.swing.JButton;
 import javax.swing.BorderFactory;
@@ -35,6 +42,7 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 
 public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 
@@ -113,14 +121,22 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 
 		table.setRowHeight(30);
 
-		DefaultTableModel model = new DefaultTableModel(new Object[][] { { null, null, null }
+		DefaultTableModel model = new DefaultTableModel(new Object[][] { { null, null, null,null }
 
-		}, new String[] { "Số Lượng", "Hàng Bán", "Tiền Hàng" });
-		table.setModel(model);
+		}, new String[] {"Số lượng","Mã món","Tên món","Tổng tiền"});
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null},
+			},
+			new String[] {
+				"Số lượng","Mã món","Tên món","Tổng tiền"
+			}
+		));
 		table.getColumnModel().getColumn(0).setPreferredWidth(100);
-		table.getColumnModel().getColumn(1).setPreferredWidth(200);
-		table.getColumnModel().getColumn(2).setPreferredWidth(150);
-
+		table.getColumnModel().getColumn(1).setPreferredWidth(100);
+		table.getColumnModel().getColumn(2).setPreferredWidth(100);
+		table.getColumnModel().getColumn(3).setPreferredWidth(150);
+		
 		scrollPane.setViewportView(table);
 
 		JPanel panel_3 = new JPanel();
@@ -161,10 +177,13 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 		panel_4.add(btnTatCa);
 
 		cbThuong = new JComboBox<>();
+		cbThuong.setForeground(new Color(0, 0, 0));
+		cbThuong.setBackground(new Color(255, 255, 255));
 		cbThuong.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		cbThuong.setBounds(10, 11, 234, 101);
 		panel_4.add(cbThuong);
-
+		UIManager.put("ComboBox.selectionBackground", new Color(240, 240, 240)); 
+//		UIManager.put("ComboBox.selectionForeground", new Color(0, 0, 0)); 
 		KhuVucBanDAO khuVucBanDAO = new KhuVucBanDAO();
 		List<String> khuVucBans = khuVucBanDAO.getAllTenKhuVucBan();
 
@@ -265,7 +284,7 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 			btnBan.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					JOptionPane.showMessageDialog(null, "Bạn đã chọn bàn: " + ban.getTenBan());
+//					JOptionPane.showMessageDialog(null, "Bạn đã chọn bàn: " + ban.getTenBan());
 					ThemMon.luuMaBan = ban.getMaBan();
 					PhieuDat.maBan = ban.getMaBan();
 					if (ban.isTrangThai()) {
@@ -276,12 +295,21 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 						model.setRowCount(0);
 
 						for (ChiTietPhieuDat chiTiet : chiTietList) {
-							int soLuong = chiTiet.getSoLuong();
-							MonAnUong monAnUong = chiTiet.getMonAnUong();
+						    int soLuong = chiTiet.getSoLuong();
+						    MonAnUong monAnUong = chiTiet.getMonAnUong();
 
-							model.addRow(new Object[] { soLuong, monAnUong.getTenMonAnUong(),
-									monAnUong.getGiaTien() * soLuong });
+						    if (monAnUong != null) {
+						        model.addRow(new Object[]{
+						            soLuong,
+						            monAnUong.getMaMonAnUong(),
+						            monAnUong.getTenMonAnUong(),
+						            monAnUong.getGiaTien() * soLuong
+						        });
+						    } else {
+						        
+						    }
 						}
+
 
 						table.revalidate();
 						table.repaint();
@@ -301,6 +329,8 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 		btnTatCa.addActionListener(this);
 		btnHuyDatBan.addActionListener(this);
 		btnDatBan.addActionListener(this);
+		btnThanhToan.addActionListener(this);
+		
 
 	}
 	private JButton createBanButton(Ban ban) {
@@ -324,7 +354,7 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 	        @Override
 	        public void actionPerformed(ActionEvent e) {
 	            // xử lý sự kiện khi bàn được chọn
-	            JOptionPane.showMessageDialog(null, "Bạn đã chọn bàn: " + ban.getTenBan());
+//	            JOptionPane.showMessageDialog(null, "Bạn đã chọn bàn: " + ban.getTenBan());
 	            ThemMon.luuMaBan = ban.getMaBan();
 				PhieuDat.maBan = ban.getMaBan();
 				if (ban.isTrangThai()) {
@@ -335,12 +365,21 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 					model.setRowCount(0);
 
 					for (ChiTietPhieuDat chiTiet : chiTietList) {
-						int soLuong = chiTiet.getSoLuong();
-						MonAnUong monAnUong = chiTiet.getMonAnUong();
+					    int soLuong = chiTiet.getSoLuong();
+					    MonAnUong monAnUong = chiTiet.getMonAnUong();
 
-						model.addRow(new Object[] { soLuong, monAnUong.getTenMonAnUong(),
-								monAnUong.getGiaTien() * soLuong });
+					    if (monAnUong != null) {
+					        model.addRow(new Object[]{
+					            soLuong,
+					            monAnUong.getMaMonAnUong(),
+					            monAnUong.getTenMonAnUong(),
+					            monAnUong.getGiaTien() * soLuong
+					        });
+					    } else {
+					        
+					    }
 					}
+
 
 					table.revalidate();
 					table.repaint();
@@ -394,7 +433,113 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 			 String selectedKhu = (String) cbThuong.getSelectedItem();
 		        updateBanList(selectedKhu);
 		
-		} else if (e.getSource() == btnTatCa) {
+		}
+		else if (e.getSource() == btnThanhToan) {
+		    String maNV = "admin";  
+		    String maKH = null;
+		    String maBan = ThemMon.luuMaBan; // Mã bàn đã lưu trước đó
+		    
+
+		    // Kiểm tra trạng thái của bàn
+		    BanDAO banDAO = new BanDAO();
+		   
+		    if ( banDAO.isBanDaDat(ThemMon.luuMaBan) == false) {
+		        JOptionPane.showMessageDialog(null, "Bàn chưa được xác nhận thanh toán. Không thể tạo hóa đơn.");
+		        return; // Dừng lại nếu trạng thái bàn không hợp lệ
+		    }
+		    
+		    HoaDonDAO hoaDonDAO = new HoaDonDAO();
+		    if (hoaDonDAO.kiemTraHoaDonTontai(maBan)) {
+		     
+		        JOptionPane.showMessageDialog(null, "Đã có hóa đơn chưa thanh toán (trạng thái = 0) với bàn này.");
+		        new ThanhToanBan().setVisible(true); 
+		        return; 
+		    }
+		    
+		    
+		    
+		    double thanhTien = 0.0;
+		    double tongTien = 0.0;
+
+		  
+		    for (int row = 0; row < table.getRowCount(); row++) {
+		        Object rowThanhTienObj = table.getValueAt(row, 3); 
+		        System.out.println("Dòng " + row + " tổng tiền: " + rowThanhTienObj);  // Ghi log giá trị tổng tiền của mỗi món ăn
+
+		        if (rowThanhTienObj instanceof Double) {
+		            double rowThanhTien = (Double) rowThanhTienObj;
+		            thanhTien += rowThanhTien;  
+		        } else if (rowThanhTienObj instanceof String) {
+		            try {
+		                double rowThanhTien = Double.parseDouble((String) rowThanhTienObj);
+		                thanhTien += rowThanhTien;  
+		            } catch (NumberFormatException ex) {
+		                System.out.println("Không thể chuyển đổi giá trị: " + rowThanhTienObj);
+		            }
+		        }
+		    }
+
+		    // Tính tổng tiền (thêm 10%)
+		    tongTien = thanhTien * 1.1; // Thêm 10%
+
+		    boolean trangThai = false; // Chưa thanh toán (trạng thái = 0)
+		    
+		    HoaDon hoaDon = new HoaDon();
+		    hoaDon.setMaHoaDon(hoaDonDAO.generateMaHoaDon()); 
+		    hoaDon.setNhanVien(new NhanVien(maNV));  // Tạo đối tượng nhân viên
+		    hoaDon.setKhachHang(new KhachHang(maKH));  // Tạo đối tượng khách hàng
+		    hoaDon.setBan(new Ban(maBan));  // Tạo đối tượng bàn
+		    hoaDon.setThue(new Thue("T00001"));
+		    hoaDon.setThanhTien(thanhTien);
+		    hoaDon.setTongTien(tongTien);
+		    hoaDon.setTrangThai(trangThai);
+
+		    // Lưu hóa đơn vào cơ sở dữ liệu
+		    boolean result = hoaDonDAO.themHoaDon(hoaDon);
+
+		    if (result) {
+		        System.out.println("Hóa đơn đã được tạo thành công. Mã hóa đơn: " + hoaDon.getMaHoaDon());
+		        
+		        // Thêm chi tiết hóa đơn cho từng món ăn trong bảng
+		        for (int row = 0; row < table.getRowCount(); row++) {
+		            String maMonAn = (String) table.getValueAt(row, 1); // Mã món ăn
+		            int soLuong = (Integer) table.getValueAt(row, 0); // Số lượng món ăn
+		            System.out.println("Mã món ăn: " + maMonAn + " Số lượng: " + soLuong);
+
+		            // Tạo chi tiết hóa đơn
+		            ChiTietHoaDon chiTietHoaDon = new ChiTietHoaDon();
+		            chiTietHoaDon.setHoaDon(hoaDon); // Liên kết với hóa đơn vừa tạo
+		            chiTietHoaDon.setMonAnUong(new MonAnUong(maMonAn)); // Món ăn
+		            chiTietHoaDon.setSoLuongMonAn(soLuong); // Số lượng
+
+		            ChiTietHoaDonDAO chiTietHoaDonDAO = new ChiTietHoaDonDAO();
+		            boolean chiTietResult = chiTietHoaDonDAO.themChiTietHoaDon(chiTietHoaDon);
+
+		            if (chiTietResult) {
+		                System.out.println("Chi tiết hóa đơn cho món " + maMonAn + " đã được thêm thành công.");
+		            } else {
+		                System.out.println("Lỗi khi thêm chi tiết hóa đơn cho món " + maMonAn);
+		                JOptionPane.showMessageDialog(null, "Lỗi khi thêm chi tiết hóa đơn.");
+		                return; // Nếu gặp lỗi khi thêm chi tiết hóa đơn, dừng quá trình
+		            }
+		        }
+
+		        // Thông báo thành công khi tạo hóa đơn và chi tiết hóa đơn
+		        JOptionPane.showMessageDialog(null, "Hóa đơn và chi tiết hóa đơn đã được tạo thành công.");
+		    } else {
+		        JOptionPane.showMessageDialog(null, "Lỗi khi tạo hóa đơn.");
+		    }
+
+		    // Hiển thị giao diện ThanhToanBan sau khi tạo hóa đơn
+		    new ThanhToanBan().setVisible(true); 
+		}
+
+
+		    
+		 
+		
+
+		else if (e.getSource() == btnTatCa) {
 			BanDAO banDAO = new BanDAO();
 			List<Ban> bans = banDAO.getAllBans();
 
@@ -406,7 +551,7 @@ public class PanelNhaHangMenu1 extends JPanel implements ActionListener {
 				JButton button = new JButton(ban.getTenBan());
 				button.setForeground(new Color(255, 255, 255));
 				button.setBackground(new Color(0, 117, 225));
-
+				
 				button.setToolTipText("Mã bàn: " + ban.getMaBan());
 				pnDanhSachBan.add(button);
 			}

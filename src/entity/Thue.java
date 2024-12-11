@@ -21,6 +21,10 @@ public class Thue {
 		this.moTa = moTa;
 		this.doiTuongChiuThue = doiTuongChiuThue;
 	}
+	public Thue(String maThue) {
+		// TODO Auto-generated constructor stub
+		this.maThue = maThue;
+	}
 	public String getMaThue() {
 		return maThue;
 	}

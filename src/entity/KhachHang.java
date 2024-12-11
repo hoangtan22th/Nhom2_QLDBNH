@@ -27,6 +27,13 @@ public class KhachHang {
 		this.tenKH = tenKH;
 		this.sdt = sdt;
 	}
+	public KhachHang() {
+		// TODO Auto-generated constructor stub
+	}
+	public KhachHang(String maKH) {
+		// TODO Auto-generated constructor stub
+		this.maKH = maKH;
+	}
 	public String getMaKH() {
 		return maKH;
 	}

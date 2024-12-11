@@ -79,9 +79,6 @@ public class BanDAO {
 			while (rs.next()) {
 				String maBan = rs.getString("maBan");
 				String tenBan = rs.getString("tenBan");
-				LocalDateTime thoiGianDatBan = rs.getTimestamp("thoiGianDatBan") != null
-						? rs.getTimestamp("thoiGianDatBan").toLocalDateTime()
-						: null;
 				int soChoNgoi = rs.getInt("soChoNgoi");
 				boolean trangThai = rs.getBoolean("trangThai");
 				boolean loaiBan = rs.getBoolean("loaiBan");
@@ -89,7 +86,7 @@ public class BanDAO {
 				String tenKhu = rs.getString("tenKhu");
 
 				KhuVucBan khuVucBan = new KhuVucBan(maKhu, tenKhu, 0);
-				Ban ban = new Ban(maBan, tenBan, thoiGianDatBan, soChoNgoi, trangThai, loaiBan, khuVucBan);
+				Ban ban = new Ban(maBan, tenBan,null, soChoNgoi, trangThai, loaiBan, khuVucBan);
 
 				bans.add(ban);
 			}

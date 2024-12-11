@@ -166,7 +166,7 @@ public class DangNhap extends JFrame implements ActionListener{
     	        menu = new Menu();
     	        menu.thayDoiMenuTheoVaiTro(check); 
     	        JOptionPane.showMessageDialog(null, "Đăng nhập thành công!");
-    	        menu.setVisible(true); // Hiển thị giao diện
+    	        menu.setVisible(true); 
     	        setVisible(false); 
     	    } else {
     	        JOptionPane.showMessageDialog(null, "Tên đăng nhập hoặc mật khẩu không chính xác!", "Lỗi", JOptionPane.ERROR_MESSAGE);

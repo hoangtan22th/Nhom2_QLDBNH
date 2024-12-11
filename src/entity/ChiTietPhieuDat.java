@@ -1,5 +1,7 @@
 package entity;
 
+import java.time.LocalDateTime;
+
 public class ChiTietPhieuDat {
 	private int soLuong;
 	private MonAnUong monAnUong;
@@ -14,6 +16,11 @@ public class ChiTietPhieuDat {
 	}
 	public ChiTietPhieuDat() {
 		
+	}
+	
+
+	public ChiTietPhieuDat(int soLuong2, MonAnUong monAnUong2, LocalDateTime thoiGianDen, int soLuongKhach) {
+		// TODO Auto-generated constructor stub
 	}
 	public int getSoLuong() {
 		return soLuong;

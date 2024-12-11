@@ -19,6 +19,33 @@ import entity.NhanVien;
 import entity.PhieuDatBan;
 
 public class PhieuDatBanDAO {
+	public boolean capNhatPhieuDat(PhieuDatBan phieuDat) {
+	    Connection con = connectDB.getConnection();
+	    String query = "UPDATE PhieuDatBan SET TenKhachDat = ?, SoLuongKhach = ?, NgayDat = ?, GhiChu = ?, TienCoc = ?, SoDienThoai = ? WHERE MaPhieuDat = ?";
+
+	    try (PreparedStatement ps = con.prepareStatement(query)) {   
+	        // Cập nhật đúng các thuộc tính
+	        ps.setString(1, phieuDat.getTenKhachDat()); // TenKhachDat
+	        ps.setInt(2, phieuDat.getSoLuongKhach());   // SoLuongKhach
+	        ps.setTimestamp(3, phieuDat.getNgayDat());   // NgayDat
+	        ps.setString(4, phieuDat.getGhiChu());       // GhiChu
+	        ps.setFloat(5, phieuDat.getTienCoc());       // TienCoc
+	        ps.setString(6, phieuDat.getSoDienThoai());  // SoDienThoai
+	        ps.setString(7, phieuDat.getMaPhieuDat());      // MaPhieuDat (điều kiện WHERE)
+
+	        // Thực thi câu lệnh và kiểm tra số hàng bị ảnh hưởng
+	        return ps.executeUpdate() > 0;
+	    } catch (SQLException e) {
+	        e.printStackTrace(); // Ghi log lỗi nếu có
+	    } finally {
+	        connectDB.closeConnection(con); // Đảm bảo kết nối được đóng lại
+	    }
+
+	    return false; // Trả về false nếu có lỗi
+	}
+
+
+
 	public String phatSinhMaPhieuDatMoi() {
 	    Connection connection = null;
 	    String maPhieuDatCuoi = null;
@@ -103,7 +130,7 @@ public class PhieuDatBanDAO {
 	}
 	public List<Object[]> layTatCaPhieuDatBan() {
         List<Object[]> result = new ArrayList<>();
-        String sql = "SELECT DISTINCT pd.maPhieuDat, pd.tenKhachDat, pd.ngayDat, pd.ghiChu, pd.tienCoc, pd.trangThai, pd.soDienThoai, " +
+        String sql = "SELECT DISTINCT pd.maPhieuDat, pd.tenKhachDat, pd.ngayDat, pd.ghiChu, pd.tienCoc, pd.trangThai, pd.soDienThoai,pd.soLuongKhach, " +
                 "b.maBan, b.tenBan " +
                 "FROM QuanLyDatBanNhaHang.dbo.PhieuDatBan pd " +
                 "LEFT JOIN QuanLyDatBanNhaHang.dbo.ChiTietPhieuDat ct ON pd.maPhieuDat = ct.maPhieuDat " +
@@ -124,9 +151,9 @@ public class PhieuDatBanDAO {
                 String soDienThoai = rs.getString("soDienThoai");
                 String maBan = rs.getString("maBan");
                 String tenBan = rs.getString("tenBan");
-
+                int soLuongKhach = rs.getInt("soLuongKhach");
                 // Tạo đối tượng PhieuDatBan và Ban
-                PhieuDatBan phieuDatBan = new PhieuDatBan(maPhieuDat, tenKhachDat, 0, ngayDat, ghiChu, tienCoc, soDienThoai, trangThai, null);
+                PhieuDatBan phieuDatBan = new PhieuDatBan(maPhieuDat, tenKhachDat, soLuongKhach, ngayDat, ghiChu, tienCoc, soDienThoai, trangThai, null);
       
                 Ban ban = new Ban(maBan, tenBan, null, 0, trangThai, trangThai, null);
 

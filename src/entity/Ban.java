@@ -25,6 +25,9 @@ public class Ban {
 		super();
 		this.maBan = maBan;
 	}
+	public Ban() {
+		// TODO Auto-generated constructor stub
+	}
 	public String getMaBan() {
 		return maBan;
 	}

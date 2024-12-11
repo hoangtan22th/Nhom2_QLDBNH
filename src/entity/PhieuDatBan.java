@@ -27,6 +27,12 @@ public class PhieuDatBan {
 		this.trangThai = trangThai;
 		this.nhanVien = nhanVien;
 	}
+	
+	public PhieuDatBan(String maPhieuDat) {
+		
+		this.maPhieuDat = maPhieuDat;
+	}
+
 	public String getMaPhieuDat() {
 		return maPhieuDat;
 	}
